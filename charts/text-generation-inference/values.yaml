@@ -1,27 +1,12 @@
-nameOverride: ""
+nameOverride: text-generation-inference
 
 fullnameOverride: ""
 
 namespaceOverride: ""
 
-global:
-  additionalLabels: {}
+instanceLabelOverride: ""
 
-  imagePullSecrets: []
-
-  deploymentAnnotations: {}
-
-  podAnnotations: {}
-
-  podLabels: {}
-
-  nodeSelector: {}
-
-  tolerations: []
-
-  affinity: {}
-
-  env: []
+commonLabels: {}
 
 deployment:
   image:
@@ -29,11 +14,13 @@ deployment:
     tag: sha-96b7b40
     pullPolicy: IfNotPresent
 
-  model: meta-llama/Meta-Llama-3-8B-Instruct
-  
-  # 
-  # modelOptions:
-  #   quantize: bitsandbytes
+  labels: {}
+
+  podLabels: {}
+
+  annotations: {}
+
+  podAnnotations: {}
 
   resources:
     limits:
@@ -45,3 +32,18 @@ deployment:
   tolerations: []
 
   affinity: {}
+
+model: meta-llama/Meta-Llama-3-8B-Instruct
+
+modelOptions:
+#   quantize: bitsandbytes
+
+modelStorage:
+  pvcName: model-storage
+  accessModes:
+  - ReadWriteOnce
+  size: 100Gi
+
+huggingFaceToken:
+  secretName: hugging-face-token
+  secretKey: token

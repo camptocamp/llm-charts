@@ -1,18 +1,33 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: text-generation-inference
+  name: {{ template "text-generation-inference.fullname" . }}
+  namespace: {{ template "text-generation-inference.namespace" .}}
   labels:
-    app: text-generation-inference
+    {{- include "text-generation-inference.labels" . | nindent 4 }}
+    {{- with .Values.deployment.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  annotations:
+    {{- with .Values.deployment.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: text-generation-inference
+      {{- include "text-generation-inference.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        app: text-generation-inference
+        {{- include "text-generation-inference.labels" . | nindent 8 }}
+        {{- with .Values.deployment.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      annotations:
+        {{- with .Values.deployment.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
     spec:
       containers:
       - name: text-generation-inference
@@ -37,8 +52,8 @@ spec:
         - name: HUGGING_FACE_HUB_TOKEN
           valueFrom:
             secretKeyRef:
-              name: huggingface-token
-              key: token
+              name: {{ .Values.deployment.huggingFaceToken.secretName }}
+              key: {{ .Values.deployment.huggingFaceToken.secretKey }}
         ports:
         - containerPort: 8080
         volumeMounts:

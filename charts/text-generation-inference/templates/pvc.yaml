@@ -1,14 +1,16 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: model-storage
+  name: {{ template "text-generation-inference.fullname" . }}
+  namespace: {{ template "text-generation-inference.namespace" .}}
   labels:
-    app: text-generation-inference
+    app.kubernetes.io/component: text-generation-inference
+    {{- include "text-generation-inference.labels" . | nindent 4 }}
 spec:
   resources:
     requests:
-      storage: 200Gi
+      storage: {{ .Values.modelStorage.size }}
   accessModes:
-    - ReadWriteOnce
-  storageClassName: longhorn
-
+  {{- range .Values.modelStorage.accessModes }}
+    - {{ . | quote }}
+  {{- end }}
