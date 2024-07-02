@@ -30,15 +30,17 @@ deployment:
     pullPolicy: IfNotPresent
 
   model: meta-llama/Meta-Llama-3-8B-Instruct
-  modelOptions:
-    quantize: bitsandbytes
+  
+  # 
+  # modelOptions:
+  #   quantize: bitsandbytes
 
   resources:
     limits:
       nvidia.com/gpu: 1
     requests:
-      cpu: 4
-      memory: 10Gi
+      cpu: 2
+      memory: 5Gi
 
   tolerations: []
 
