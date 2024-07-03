@@ -1,4 +1,4 @@
-nameOverride: text-generation-inference
+nameOverride: llama-cpp
 
 fullnameOverride: ""
 
