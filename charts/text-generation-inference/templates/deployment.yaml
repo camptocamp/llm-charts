@@ -37,8 +37,8 @@ spec:
         - text-generation-launcher
         args:
         - --model-id
-        - {{ .Values.deployment.model }}
-        {{- with .Values.deployment.modelOptions }}
+        - {{ .Values.model }}
+        {{- with .Values.modelOptions }}
         {{- if .quantize }}
         - --quantize
         - {{ .quantize }}
@@ -52,8 +52,8 @@ spec:
         - name: HUGGING_FACE_HUB_TOKEN
           valueFrom:
             secretKeyRef:
-              name: {{ .Values.deployment.huggingFaceToken.secretName }}
-              key: {{ .Values.deployment.huggingFaceToken.secretKey }}
+              name: {{ .Values.huggingFaceToken.secretName }}
+              key: {{ .Values.huggingFaceToken.secretKey }}
         ports:
         - containerPort: 8080
         volumeMounts:
@@ -70,7 +70,7 @@ spec:
           sizeLimit: 1Gi
       - name: model-storage
         persistentVolumeClaim:
-          claimName: model-storage
+          claimName: {{ template "text-generation-inference.fullname" . }}
       {{- with .Values.deployment.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}

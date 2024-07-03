@@ -39,7 +39,6 @@ modelOptions:
 #   quantize: bitsandbytes
 
 modelStorage:
-  pvcName: model-storage
   accessModes:
   - ReadWriteOnce
   size: 100Gi
