@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "llama-cpp.fullname" . }}
+  namespace: {{ template "llama-cpp.namespace" .}}
+  labels:
+    {{- include "llama-cpp.labels" . | nindent 4 }}
+    {{- with .Values.deployment.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  annotations:
+    {{- with .Values.deployment.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "llama-cpp.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "llama-cpp.labels" . | nindent 8 }}
+        {{- with .Values.deployment.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      annotations:
+        {{- with .Values.deployment.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      containers:
+      - name: llama-cpp
+        image: {{ .Values.deployment.image.repository }}:{{ .Values.deployment.image.tag }}
+        imagePullPolicy: {{ .Values.deployment.image.pullPolicy }}
+        command:
+        - text-generation-launcher
+        args:
+        - --model-id
+        - {{ .Values.model }}
+        {{- with .Values.modelOptions }}
+        {{- if .quantize }}
+        - --quantize
+        - {{ .quantize }}
+        {{- end }}
+        {{- end }}
+        env:
+        - name: PORT
+          value: "8080"
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - name: shm
+          mountPath: /dev/shm
+        - name: model-storage
+          mountPath: /data
+        resources:
+          {{- toYaml .Values.deployment.resources | nindent 10 }}
+      volumes:
+      - name: shm
+        emptyDir:
+          medium: Memory
+          sizeLimit: 1Gi
+      - name: model-storage
+        persistentVolumeClaim:
+          claimName: {{ template "llama-cpp.fullname" . }}
+      {{- with .Values.deployment.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.deployment.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 6 }}
+      {{- end }}
+
+
