@@ -1,0 +1,7 @@
+apiVersion: v2
+name: llama-cpp
+version: v0.1.0
+appVersion: v2.0.4
+description:
+  A Helm chart for deploying the llama.cpp app on a Kubernetes cluster.
+

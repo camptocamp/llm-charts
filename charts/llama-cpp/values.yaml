@@ -1,0 +1,48 @@
+nameOverride: llama-cpp
+
+fullnameOverride: ""
+
+namespaceOverride: ""
+
+instanceLabelOverride: ""
+
+commonLabels: {}
+
+deployment:
+  image:
+    repository: ghcr.io/ggerganov/llama.cpp
+    tag: full-cuda
+    pullPolicy: IfNotPresent
+
+  labels: {}
+
+  podLabels: {}
+
+  annotations: {}
+
+  podAnnotations: {}
+
+  resources:
+    limits:
+      nvidia.com/gpu: 1
+    requests:
+      cpu: 2
+      memory: 5Gi
+
+  tolerations: []
+
+  affinity: {}
+
+model: meta-llama/Meta-Llama-3-8B-Instruct
+
+modelOptions:
+#   quantize: bitsandbytes
+
+modelStorage:
+  accessModes:
+  - ReadWriteOnce
+  size: 100Gi
+
+#huggingFaceToken:
+#  secretName: hugging-face-token
+#  secretKey: token
