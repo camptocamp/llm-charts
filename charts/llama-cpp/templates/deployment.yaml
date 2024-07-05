@@ -34,9 +34,9 @@ spec:
         image: {{ .Values.deployment.image.repository }}:{{ .Values.deployment.image.tag }}
         imagePullPolicy: {{ .Values.deployment.image.pullPolicy }}
         command:
-        - --all-in-one
+        - "--all-in-one"
         args:
-        - -m
+        - "-m"
         - "/data/"{{ .Values.model }}
         env:
         - name: PORT
