@@ -37,9 +37,9 @@ Allow customization of the instance label value.
 {{- default (printf "%s-%s" .Release.Name .Release.Namespace) .Values.instanceLabelOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
-{{/* 
+{{/*
 Define shared selector labels,
-This is an immutable field: this should not change between upgrade 
+This is an immutable field: this should not change between upgrade
 */}}
 {{- define "llama-cpp.selectorLabels" -}}
 app.kubernetes.io/name: {{ template "llama-cpp.name" . }}
