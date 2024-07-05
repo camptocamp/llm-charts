@@ -52,8 +52,7 @@ spec:
       initContainers:
       - name: download-model
         image: bitnami/git
-        command:
-        - git
+        command: git
         args:
         - clone
         - "https://{{ .Values.huggingFaceUser }}:"$(HUGGING_FACE_HUB_TOKEN)"@huggingface.co/{{ .Values.model }}"
