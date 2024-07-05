@@ -33,7 +33,7 @@ spec:
       - name: llama-cpp
         image: {{ .Values.deployment.image.repository }}:{{ .Values.deployment.image.tag }}
         imagePullPolicy: {{ .Values.deployment.image.pullPolicy }}
-        command: ["/app/.devops/tools.sh", "--all-in-one", "-m", "/data/{{ .Values.model }}", "-p", "Who is the inventor of Linux?"]
+        command: ["/app/.devops/tools.sh", "--server", "-m", "/data/{{ .Values.model }}"]
         env:
         - name: PORT
           value: "8080"
