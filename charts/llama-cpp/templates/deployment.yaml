@@ -55,7 +55,7 @@ spec:
         command:
         - git
         - clone
-        - https://{{ .Values.huggingFaceUser }}:"$(hugging-face-token)"@hf.co/{{ .Values.model }}
+        - https://{{ .Values.huggingFaceUser }}:"$(hugging-face-token)"@huggingface.co/{{ .Values.model }}
         - /data/{{ .Values.modelFamily }}
         env:
           - name: hugging-face-token
