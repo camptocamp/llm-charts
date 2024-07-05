@@ -56,6 +56,11 @@ spec:
               secretKeyRef:
                 name: {{ .Values.huggingFaceToken.secretName }}
                 key: {{ .Values.huggingFaceToken.secretKey }}
+        volumeMounts:
+        - name: shm
+          mountPath: /dev/shm
+        - name: model-storage
+          mountPath: /data
       volumes:
       - name: shm
         emptyDir:
