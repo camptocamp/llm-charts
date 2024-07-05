@@ -33,7 +33,7 @@ spec:
       - name: llama-cpp
         image: {{ .Values.deployment.image.repository }}:{{ .Values.deployment.image.tag }}
         imagePullPolicy: {{ .Values.deployment.image.pullPolicy }}
-        command: ["--all-in-one", "-m", "/data/{{ .Values.model }}"]
+        command: ["llama-cli", "-m", "/data/{{ .Values.model }}","-i"]
         env:
         - name: PORT
           value: "8080"
