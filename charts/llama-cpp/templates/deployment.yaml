@@ -54,6 +54,7 @@ spec:
         image: bitnami/git
         command:
         - git
+        args:
         - clone
         - "https://{{ .Values.huggingFaceUser }}:"$(HUGGING_FACE_HUB_TOKEN)"@huggingface.co/{{ .Values.model }}"
         - "/data/{{ .Values.model }}"
