@@ -35,8 +35,6 @@ deployment:
 
 model: meta-llama/Meta-Llama-3-8B-Instruct
 
-modelFamily: meta-llama
-
 modelOptions:
 #   quantize: bitsandbytes
 
