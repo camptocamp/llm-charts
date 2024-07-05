@@ -36,8 +36,7 @@ spec:
         command:
         - --all-in-one
         args:
-        - "/models/"
-        - 7B
+        - -m "/data/"{{ .Values.model }}
         env:
         - name: PORT
           value: "8080"
@@ -50,6 +49,20 @@ spec:
           mountPath: /data
         resources:
           {{- toYaml .Values.deployment.resources | nindent 10 }}
+      initContainers:
+      - name: download-model
+        image: bitnami/git
+        command:
+        - git
+        - clone
+        - https://"$hugging-face-token"@hf.co/{{ .Values.model }}
+        - /data
+        env:
+          - name: hugging-face-token
+            valueFrom:
+              secretKeyRef:
+                name: hugging-face-token
+                key: token
       volumes:
       - name: shm
         emptyDir:
