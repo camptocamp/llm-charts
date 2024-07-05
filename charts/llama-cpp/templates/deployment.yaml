@@ -34,16 +34,10 @@ spec:
         image: {{ .Values.deployment.image.repository }}:{{ .Values.deployment.image.tag }}
         imagePullPolicy: {{ .Values.deployment.image.pullPolicy }}
         command:
-        - text-generation-launcher
+        - --all-in-one
         args:
-        - --model-id
-        - {{ .Values.model }}
-        {{- with .Values.modelOptions }}
-        {{- if .quantize }}
-        - --quantize
-        - {{ .quantize }}
-        {{- end }}
-        {{- end }}
+        - "/models/"
+        - 7B
         env:
         - name: PORT
           value: "8080"
