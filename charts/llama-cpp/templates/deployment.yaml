@@ -36,7 +36,8 @@ spec:
         command:
         - --all-in-one
         args:
-        - -m "/data/"{{ .Values.model }}
+        - -m
+        - "/data/"{{ .Values.model }}
         env:
         - name: PORT
           value: "8080"
@@ -52,7 +53,8 @@ spec:
       initContainers:
       - name: download-model
         image: bitnami/git
-        command: ["git"]
+        command:
+        - git
         args:
         - clone
         - "https://{{ .Values.huggingFaceUser }}:"$(HUGGING_FACE_HUB_TOKEN)"@huggingface.co/{{ .Values.model }}"
