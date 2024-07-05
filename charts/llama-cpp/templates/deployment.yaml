@@ -34,16 +34,9 @@ spec:
         image: {{ .Values.deployment.image.repository }}:{{ .Values.deployment.image.tag }}
         imagePullPolicy: {{ .Values.deployment.image.pullPolicy }}
         command:
-        - text-generation-launcher
+        - --all-in-one
         args:
-        - --model-id
-        - {{ .Values.model }}
-        {{- with .Values.modelOptions }}
-        {{- if .quantize }}
-        - --quantize
-        - {{ .quantize }}
-        {{- end }}
-        {{- end }}
+        - -m "/data/"{{ .Values.modelFamily }}/{{ .Values.model }}
         env:
         - name: PORT
           value: "8080"
@@ -56,6 +49,20 @@ spec:
           mountPath: /data
         resources:
           {{- toYaml .Values.deployment.resources | nindent 10 }}
+      initContainers:
+      - name: download-model
+        image: bitnami/git
+        command:
+        - git
+        - clone
+        - https://"$hugging-face-token"@hf.co/{{ .Values.model }}
+        - /data/{{ .Values.modelFamily }}
+        env:
+          - name: hugging-face-token
+            valueFrom:
+              secretKeyRef:
+                name: hugging-face-token
+                key: token
       volumes:
       - name: shm
         emptyDir:

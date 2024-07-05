@@ -35,6 +35,8 @@ deployment:
 
 model: meta-llama/Meta-Llama-3-8B-Instruct
 
+modelFamily: meta-llama
+
 modelOptions:
 #   quantize: bitsandbytes
 
@@ -43,6 +45,6 @@ modelStorage:
   - ReadWriteOnce
   size: 100Gi
 
-#huggingFaceToken:
-#  secretName: hugging-face-token
-#  secretKey: token
+huggingFaceToken:
+  secretName: hugging-face-token
+  secretKey: token
