@@ -36,7 +36,7 @@ spec:
         command:
         - --all-in-one
         args:
-        - -m "/data/"{{ .Values.model }}
+        - -m "/data/"{{ .Values.modelFamily }}/{{ .Values.model }}
         env:
         - name: PORT
           value: "8080"
