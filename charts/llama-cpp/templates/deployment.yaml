@@ -64,7 +64,7 @@ spec:
       - name: convert-model
         image: {{ .Values.deployment.image.repository }}:{{ .Values.deployment.image.tag }}
         imagePullPolicy: {{ .Values.deployment.image.pullPolicy }}
-        command: ["/app/.devops/tools.sh", "--convert", "/data/{{ .Values.model }}","original"]
+        command: ["/app/convert-hf-to-gguf.py", "/data/{{ .Values.model }}", "original"]
         volumeMounts:
         - name: shm
           mountPath: /dev/shm
