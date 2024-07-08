@@ -33,7 +33,7 @@ spec:
       - name: llama-cpp
         image: {{ .Values.deployment.image.repository }}:{{ .Values.deployment.image.tag }}
         imagePullPolicy: {{ .Values.deployment.image.pullPolicy }}
-        command: ["/app/.devops/tools.sh", "--server", "-m", "/data/{{ .Values.model }}/ggml-model-q4_0.gguf", "--port","$(PORT)"]
+        command: ["/app/.devops/tools.sh", "--server", "-m", "/data/{{ .Values.model }}/{{ .Values.modelOptions.quantize.convertOutput }}", "--port","$(PORT)"]
         env:
         - name: PORT
           value: "8080"
@@ -73,7 +73,7 @@ spec:
       - name: quantize-model
         image: {{ .Values.deployment.image.repository }}:{{ .Values.deployment.image.tag }}
         imagePullPolicy: {{ .Values.deployment.image.pullPolicy }}
-        command: ["/app/.devops/tools.sh", "--quantize", "/data/{{ .Values.model }}/ggml-model-f16.gguf","/data/{{ .Values.model }}/ggml-model-q4_0.gguf", "q4_0"]
+        command: ["/app/.devops/tools.sh", "--quantize", "/data/{{ .Values.model }}/{{ .Values.modelOptions.quantize.convertInput }}","/data/{{ .Values.model }}/{{ .Values.modelOptions.quantize.convertOutput }}", "{{ .Values.modelOptions.quantize.convertFormat }}"]
         volumeMounts:
         - name: shm
           mountPath: /dev/shm

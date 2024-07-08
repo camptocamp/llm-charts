@@ -36,7 +36,10 @@ deployment:
 model: meta-llama/Meta-Llama-3-8B-Instruct
 
 modelOptions:
-#   quantize: bitsandbytes
+  quantize:
+    convertInput: ggml-model-f16.gguf
+    convertOutput: ggml-model-q4_0.gguf
+    convertFormat: q4_0
 
 modelStorage:
   accessModes:
