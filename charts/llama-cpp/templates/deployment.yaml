@@ -33,7 +33,7 @@ spec:
       - name: llama-cpp
         image: {{ .Values.deployment.image.repository }}:{{ .Values.deployment.image.tag }}
         imagePullPolicy: {{ .Values.deployment.image.pullPolicy }}
-        command: ["/app/.devops/tools.sh", "--server", "-m", "/data/{{ .Values.model }}.bin", "--port","$(PORT)"]
+        command: ["/app/.devops/tools.sh", "--server", "-m", "/data/{{ .Values.model }}/ggml-model-q4_0.gguf", "--port","$(PORT)"]
         env:
         - name: PORT
           value: "8080"
