@@ -49,7 +49,7 @@ spec:
       initContainers:
       - name: download-model
         image: bitnami/git
-        command: ["bash", "-c", "if", "!", "test", "-d", "/data/{{ .Values.model }}", ";", "then", "git", "clone", "https://{{ .Values.huggingFaceUser }}:$(HUGGING_FACE_HUB_TOKEN)@huggingface.co/{{ .Values.model }}", "/data/{{ .Values.model }}",";","fi"]
+        command: ["bash", "-c", "if ! test -d /data/{{ .Values.model }} ; then git clone https://{{ .Values.huggingFaceUser }}:$(HUGGING_FACE_HUB_TOKEN)@huggingface.co/{{ .Values.model }} /data/{{ .Values.model }} ; fi"]
         env:
           - name: HUGGING_FACE_HUB_TOKEN
             valueFrom:
