@@ -64,7 +64,16 @@ spec:
       - name: convert-model
         image: {{ .Values.deployment.image.repository }}:{{ .Values.deployment.image.tag }}
         imagePullPolicy: {{ .Values.deployment.image.pullPolicy }}
-        command: ["/app/.devops/tools.sh", "--all-in-one", "/data/{{ .Values.model }}","original"]
+        command: ["/app/.devops/tools.sh", "--convert", "/data/{{ .Values.model }}","original"]
+        volumeMounts:
+        - name: shm
+          mountPath: /dev/shm
+        - name: model-storage
+          mountPath: /data
+      - name: quantize-model
+        image: {{ .Values.deployment.image.repository }}:{{ .Values.deployment.image.tag }}
+        imagePullPolicy: {{ .Values.deployment.image.pullPolicy }}
+        command: ["/app/.devops/tools.sh", "--quantize", "/data/{{ .Values.model }}/original/ggml-model-f16.bin","/data/{{ .Values.model }}/original/ggml-model-q4_0.bin"]
         volumeMounts:
         - name: shm
           mountPath: /dev/shm
