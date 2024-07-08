@@ -73,7 +73,7 @@ spec:
       - name: quantize-model
         image: {{ .Values.deployment.image.repository }}:{{ .Values.deployment.image.tag }}
         imagePullPolicy: {{ .Values.deployment.image.pullPolicy }}
-        command: ["/app/.devops/tools.sh", "--quantize", "/data/{{ .Values.model }}/original/ggml-model-f16.gguf","/data/{{ .Values.model }}/original/ggml-model-q4_0.gguf", "q4_0"]
+        command: ["/app/.devops/tools.sh", "--quantize", "/data/{{ .Values.model }}/ggml-model-f16.gguf","/data/{{ .Values.model }}/ggml-model-q4_0.gguf", "q4_0"]
         volumeMounts:
         - name: shm
           mountPath: /dev/shm
