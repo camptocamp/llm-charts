@@ -33,7 +33,7 @@ spec:
       - name: llama-cpp
         image: {{ .Values.deployment.image.repository }}:{{ .Values.deployment.image.tag }}
         imagePullPolicy: {{ .Values.deployment.image.pullPolicy }}
-        command: ["/app/.devops/tools.sh", "--server", "-m", "/data/{{ .Values.model }}.bin"]
+        command: ["/app/.devops/tools.sh", "--server", "-m", "/data/{{ .Values.model }}.bin", "--port","$(PORT)"]
         env:
         - name: PORT
           value: "8080"
@@ -56,6 +56,15 @@ spec:
               secretKeyRef:
                 name: {{ .Values.huggingFaceToken.secretName }}
                 key: {{ .Values.huggingFaceToken.secretKey }}
+        volumeMounts:
+        - name: shm
+          mountPath: /dev/shm
+        - name: model-storage
+          mountPath: /data
+      - name: convert-model
+        image: {{ .Values.deployment.image.repository }}:{{ .Values.deployment.image.tag }}
+        imagePullPolicy: {{ .Values.deployment.image.pullPolicy }}
+        command: ["/app/.devops/tools.sh", "--all-in-one", "/data/{{ .Values.model }}"]
         volumeMounts:
         - name: shm
           mountPath: /dev/shm
