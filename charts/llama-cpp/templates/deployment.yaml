@@ -33,7 +33,18 @@ spec:
       - name: serve-model
         image: {{ .Values.deployment.image.repository }}:{{ .Values.deployment.image.tag }}
         imagePullPolicy: {{ .Values.deployment.image.pullPolicy }}
-        command: ["./llama-server", "-m", "/data/{{ .Values.model }}/{{ .Values.modelOptions.quantize.convertOutput }}", "--port","$(PORT)"]
+        command:
+        - "./llama-server"
+        args:
+        - "-m"
+        - "/data/{{ .Values.model }}/{{ .Values.modelOptions.quantize.convertOutput }}"
+        - "--port"
+        - "$(PORT)"
+        {{- with .Values.modelOptions }}
+        {{- if .metricsEnable }}
+        - --metrics
+        {{- end }}
+        {{- end }}
         env:
         - name: PORT
           value: "8080"
@@ -74,7 +85,7 @@ spec:
       - name: quantize-model
         image: {{ .Values.deployment.image.repository }}:{{ .Values.deployment.image.tag }}
         imagePullPolicy: {{ .Values.deployment.image.pullPolicy }}
-        command: ["./llama-quantize", "/data/{{ .Values.model }}/{{ .Values.modelOptions.quantize.convertInput }}","/data/{{ .Values.model }}/{{ .Values.modelOptions.quantize.convertOutput }}", "{{ .Values.modelOptions.quantize.convertFormat }}"]
+        command: ["./llama-quantize", "/data/{{ .Values.model }}/{{ .Values.modelOptions.quantize.convertInput }}", "/data/{{ .Values.model }}/{{ .Values.modelOptions.quantize.convertOutput }}", "{{ .Values.modelOptions.quantize.convertFormat }}"]
         volumeMounts:
         - name: shm
           mountPath: /dev/shm
