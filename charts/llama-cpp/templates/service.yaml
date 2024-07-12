@@ -9,11 +9,9 @@ metadata:
   annotations:
     prometheus.io/scrape: 'true'
 spec:
-  #type: ClusterIP
   clusterIP: "None"
-  #clusterIP: {{ .Values.service.IP }}
   ports:
-  - name: web
+  - name: http-alt
     port: {{ .Values.service.port }}
     targetPort: {{ .Values.service.port }}
   selector:
