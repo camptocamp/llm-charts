@@ -5,6 +5,7 @@ metadata:
   labels:
     app: {{ template "llama-cpp.name" . }}
     chart: {{ template "llama-cpp.chart" . }}
+    app.kubernetes.io/name: {{ template "llama-cpp.name" . }}
   annotations:
     prometheus.io/scrape: 'true'
 spec:
