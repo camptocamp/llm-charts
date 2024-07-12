@@ -47,6 +47,7 @@ spec:
         {{- end }}
         ports:
         - containerPort: {{ .Values.service.port }}
+          name: web
         volumeMounts:
         - name: shm
           mountPath: /dev/shm
