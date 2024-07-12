@@ -39,17 +39,14 @@ spec:
         - "-m"
         - "/data/{{ .Values.model }}/{{ .Values.modelOptions.quantize.convertOutput }}"
         - "--port"
-        - "$(PORT)"
+        - "{{ .Values.service.port }}"
         {{- with .Values.modelOptions }}
         {{- if .metricsEnable }}
         - --metrics
         {{- end }}
         {{- end }}
-        env:
-        - name: PORT
-          value: "8080"
         ports:
-        - containerPort: 8080
+        - containerPort: "{{ .Values.service.port }}"
         volumeMounts:
         - name: shm
           mountPath: /dev/shm

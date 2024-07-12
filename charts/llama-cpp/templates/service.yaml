@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "llama-cpp.fullname" . }}
+  labels:
+    app: {{ template "llama-cpp.name" . }}
+    chart: {{ template "llama-cpp.chart" . }}
+spec:
+  clusterIP: None
+  ports:
+  - name: http-alt
+    port: {{ .Values.service.port }}
+    targetPort: {{ .Values.service.port }}
+  selector:
+    app: {{ template "llama-cpp.name" . }}
+    release: {{ .Release.Name }}

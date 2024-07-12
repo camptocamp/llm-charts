@@ -33,6 +33,9 @@ deployment:
 
   affinity: {}
 
+service:
+  port: 8080
+
 model: meta-llama/Meta-Llama-3-8B-Instruct
 
 modelOptions:
@@ -41,6 +44,11 @@ modelOptions:
     convertOutput: ggml-model-q4_0.gguf
     convertFormat: q4_0
   metricsEnable: true
+  benchmark:
+    promptNumber: 512
+    textGenerationNumber: 128
+    batchNumber: 2048
+    output: json
 
 modelStorage:
   accessModes:
