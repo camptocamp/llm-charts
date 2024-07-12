@@ -10,7 +10,8 @@ metadata:
     prometheus.io/scrape: 'true'
 spec:
   type: ClusterIP
-  clusterIP: {{ .Values.service.IP }}
+  clusterIP: none
+  #clusterIP: {{ .Values.service.IP }}
   ports:
   - name: web
     port: {{ .Values.service.port }}
