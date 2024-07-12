@@ -5,7 +5,7 @@ metadata:
   name: {{ template "llama-cpp.fullname" . }}
 spec:
   endpoints:
-  - port: http-alt
+  - port: {{ .Values.service.port }}
     path: /metrics
   namespaceSelector:
     matchNames:

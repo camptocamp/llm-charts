@@ -11,8 +11,7 @@ metadata:
 spec:
   clusterIP: "None"
   ports:
-  - name: http-alt
-    port: {{ .Values.service.port }}
-    targetPort: http-alt
+  - port: {{ .Values.service.port }}
+    targetPort: {{ .Values.service.port }}
   selector:
     app.kubernetes.io/name: {{ template "llama-cpp.name" . }}
