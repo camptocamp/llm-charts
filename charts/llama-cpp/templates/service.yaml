@@ -15,4 +15,3 @@ spec:
     targetPort: {{ .Values.service.port }}
   selector:
     app.kubernetes.io/name: {{ template "llama-cpp.name" . }}
-    release: {{ .Release.Name }}
