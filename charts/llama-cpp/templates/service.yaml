@@ -5,6 +5,8 @@ metadata:
   labels:
     app: {{ template "llama-cpp.name" . }}
     chart: {{ template "llama-cpp.chart" . }}
+  annotations:
+    prometheus.io/scrape: 'true'
 spec:
   clusterIP: None
   ports:
