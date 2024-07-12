@@ -1,0 +1,17 @@
+{{- if .Values.modelOptions.metricsEnable }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ template "llama-cpp.fullname" . }}-exporter
+spec:
+  endpoints:
+  - honorLabels: true
+    port: {{ .Values.service.port }}
+  jobLabel: {{ template "llama-cpp.name" . }}
+  namespaceSelector:
+    matchNames:
+      - {{ template "llama-cpp.namespace" .}}
+  selector:
+    matchLabels:
+      app: {{ template "llama-cpp.name" . }}
+{{- end }}
