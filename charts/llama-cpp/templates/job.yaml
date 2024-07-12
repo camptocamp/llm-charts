@@ -10,7 +10,7 @@ spec:
       - name: benchmark-model
         image: {{ .Values.deployment.image.repository }}:{{ .Values.deployment.image.tag }}
         imagePullPolicy: {{ .Values.deployment.image.pullPolicy }}
-        command: ["./llama-bench", "-m", "/data/{{ .Values.model }}/{{ .Values.modelOptions.quantize.convertOutput }}", "-p", "{{ .Values.modelOptions.benchmark.promptNumber }}", "-n", "{{ .Values.modelOptions.benchmark.textGenerationNumber }}" "-b", "{{ .Values.modelOptions.benchmark.batchNumber }}, "-o","{{ .Values.modelOptions.benchmark.output }}"]
+        command: ["./llama-bench", "-m", "/data/{{ .Values.model }}/{{ .Values.modelOptions.quantize.convertOutput }}", "-p", "{{ .Values.modelOptions.benchmark.promptNumber }}", "-n", "{{ .Values.modelOptions.benchmark.textGenerationNumber }}", "-b", "{{ .Values.modelOptions.benchmark.batchNumber }}, "-o","{{ .Values.modelOptions.benchmark.output }}"]
         volumeMounts:
         - name: shm
           mountPath: /dev/shm
