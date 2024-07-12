@@ -16,6 +16,7 @@ spec:
           mountPath: /dev/shm
         - name: model-storage
           mountPath: /data
+          readOnly: true
       restartPolicy: Never
       volumes:
       - name: shm
