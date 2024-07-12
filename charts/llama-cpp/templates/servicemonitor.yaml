@@ -6,6 +6,7 @@ metadata:
 spec:
   endpoints:
   - port: web
+    path: /metrics
   namespaceSelector:
     matchNames:
       - {{ template "llama-cpp.namespace" .}}
