@@ -39,7 +39,7 @@ spec:
         - "-m"
         - "/data/{{ .Values.model }}/{{ .Values.modelOptions.quantize.convertOutput }}"
         - "--port"
-        - "{{ .Values.service.port }}"
+        - '"{{ .Values.service.port }}"'
         {{- with .Values.modelOptions }}
         {{- if .metricsEnable }}
         - --metrics
