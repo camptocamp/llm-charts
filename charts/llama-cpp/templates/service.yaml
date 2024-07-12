@@ -10,7 +10,7 @@ metadata:
 spec:
   clusterIP: None
   ports:
-  - name: http-alt
+  - name: web
     port: {{ .Values.service.port }}
     targetPort: {{ .Values.service.port }}
   selector:

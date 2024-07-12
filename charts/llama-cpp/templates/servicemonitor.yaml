@@ -2,12 +2,10 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: {{ template "llama-cpp.fullname" . }}-exporter
+  name: {{ template "llama-cpp.fullname" . }}
 spec:
   endpoints:
-  - honorLabels: true
-    port: http-alt
-  jobLabel: {{ template "llama-cpp.name" . }}
+  - port: web
   namespaceSelector:
     matchNames:
       - {{ template "llama-cpp.namespace" .}}
