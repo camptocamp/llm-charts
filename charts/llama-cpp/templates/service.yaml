@@ -8,7 +8,7 @@ metadata:
   annotations:
     prometheus.io/scrape: 'true'
 spec:
-  clusterIP: None
+  type: clusterIP
   ports:
   - name: web
     port: {{ .Values.service.port }}
