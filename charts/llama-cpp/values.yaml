@@ -34,7 +34,7 @@ deployment:
   affinity: {}
 
 service:
-  port: 8080
+  port: "8080"
 
 model: meta-llama/Meta-Llama-3-8B-Instruct
 
