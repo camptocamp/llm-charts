@@ -13,5 +13,5 @@ spec:
       - {{ template "llama-cpp.namespace" .}}
   selector:
     matchLabels:
-      app: {{ template "llama-cpp.name" . }}
+      app.kubernetes.io/name: {{ template "llama-cpp.name" . }}
 {{- end }}
