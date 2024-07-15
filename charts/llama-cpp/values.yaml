@@ -35,6 +35,7 @@ deployment:
 
 service:
   port: "8080"
+  IP: 10.99.100.123
 
 model: meta-llama/Meta-Llama-3-8B-Instruct
 
