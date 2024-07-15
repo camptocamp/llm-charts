@@ -40,6 +40,8 @@ spec:
         - "/data/{{ .Values.model }}/{{ .Values.modelOptions.quantize.convertOutput }}"
         - "--port"
         - "{{ .Values.service.port }}"
+        - "--host"
+        - "0.0.0.0"
         {{- with .Values.modelOptions }}
         {{- if .metricsEnable }}
         - --metrics
