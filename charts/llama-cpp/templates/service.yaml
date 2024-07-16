@@ -2,6 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ template "llama-cpp.fullname" . }}
+  namespace: {{ template "llama-cpp.namespace" .}}
   labels:
     app: {{ template "llama-cpp.name" . }}
     chart: {{ template "llama-cpp.chart" . }}
@@ -10,7 +11,7 @@ metadata:
     prometheus.io/scrape: 'true'
 spec:
   type: ClusterIP
-  clusterIP: {{ .Values.service.IP }}
+  clusterIP: None
   ports:
   - port: {{ .Values.service.port }}
     targetPort: http
