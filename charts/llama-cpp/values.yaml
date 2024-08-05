@@ -40,7 +40,7 @@ model: meta-llama/Meta-Llama-3-8B-Instruct
 
 modelOptions:
   quantize:
-    convertInput: ggml-model-f16.gguf
+    convertInput: Meta-Llama-3-8B-Instruct-F16.gguf
     convertOutput: ggml-model-q4_0.gguf
     convertFormat: q4_0
   metricsEnable: true
