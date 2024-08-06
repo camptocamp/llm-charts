@@ -55,11 +55,9 @@ modelStorage:
   - ReadWriteOnce
   size: 100Gi
 
-kube-prometheus-stack:
-  grafana:
-    plugins:
-      - grafana-llm-app
-
 huggingFaceToken:
   secretName: hugging-face-token
   secretKey: token
+
+grafana_dashboard:
+    enabled: true
