@@ -157,6 +157,9 @@
             },
             "insertNulls": false,
             "lineInterpolation": "linear",
+            "lineStyle": {
+              "fill": "solid"
+            },
             "lineWidth": 1,
             "pointSize": 5,
             "scaleDistribution": {
@@ -172,7 +175,10 @@
               "mode": "off"
             }
           },
+          "decimals": 0,
           "mappings": [],
+          "max": 1,
+          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -185,7 +191,8 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unit": "none"
         },
         "overrides": []
       },
@@ -933,6 +940,6 @@
   "timezone": "browser",
   "title": "llama.cpp",
   "uid": "fdtzxgskowsg0f",
-  "version": 1,
+  "version": 2,
   "weekStart": ""
 }
