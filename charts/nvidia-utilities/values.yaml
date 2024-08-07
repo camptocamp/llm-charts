@@ -4,19 +4,19 @@ nvidia-device-plugin: {}
 
 # Full customization values for the Helm chart of the DCGM Exporter are available here:
 # https://github.com/NVIDIA/dcgm-exporter/blob/3.3.7-3.5.0/deployment/values.yaml
-dcgm-exporter:
-      tolerations:
-      - key: nodepool
-        operator: Equal
-        value: llm
-        effect: NoSchedule
 
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-            - matchExpressions:
-              - key: role
-                operator: In
-                values:
-                - llm
+tolerations:
+- key: nodepool
+  operator: Equal
+  value: llm
+  effect: NoSchedule
+
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: role
+          operator: In
+          values:
+          - llm
