@@ -1,3 +1,22 @@
 # Full customization values for the Helm chart of the NVIDIA Device Plugin are available here:
 # https://github.com/NVIDIA/k8s-device-plugin/blob/v0.15.0/deployments/helm/nvidia-device-plugin/values.yaml
 nvidia-device-plugin: {}
+
+# Full customization values for the Helm chart of the DCGM Exporter are available here:
+# https://github.com/NVIDIA/dcgm-exporter/blob/3.3.7-3.5.0/deployment/values.yaml
+dcgm-exporter:
+      tolerations:
+      - key: nodepool
+        operator: Equal
+        value: llm
+        effect: NoSchedule
+
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: role
+                operator: In
+                values:
+                - llm
