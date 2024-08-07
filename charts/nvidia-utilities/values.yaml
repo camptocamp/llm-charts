@@ -24,4 +24,4 @@ dcgm-exporter:
 
 
 grafana_dashboard:
-  enabled: true
+    enabled: true
