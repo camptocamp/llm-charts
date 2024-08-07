@@ -8,3 +8,6 @@ dependencies:
   - name: nvidia-device-plugin
     version: 0.15.0
     repository: https://nvidia.github.io/k8s-device-plugin
+  - name: dcgm-exporter
+    version: 3.3.7-3.5.0
+    repository: https://nvidia.github.io/dcgm-exporter/helm-charts
