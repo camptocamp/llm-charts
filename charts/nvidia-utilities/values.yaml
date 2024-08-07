@@ -21,3 +21,7 @@ dcgm-exporter:
             operator: In
             values:
             - llm
+
+
+grafana_dashboard:
+  enabled: true
