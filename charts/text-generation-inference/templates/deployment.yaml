@@ -31,7 +31,7 @@ spec:
     spec:
       containers:
       - name: text-generation-inference
-        image: {{ .Values.deployment.image.repository }}:{{ .Values.deployment.image.tag }}
+        image: {{ .Values.deployment.image.repository }}:{{ .Values.deployment.image.tag | default .Chart.AppVersion }}
         imagePullPolicy: {{ .Values.deployment.image.pullPolicy }}
         command:
         - text-generation-launcher
@@ -56,6 +56,8 @@ spec:
               key: {{ .Values.huggingFaceToken.secretKey }}
         ports:
         - containerPort: 8080
+          name: api
+          protocol: TCP
         volumeMounts:
         - name: shm
           mountPath: /dev/shm
@@ -79,5 +81,3 @@ spec:
       tolerations:
         {{- toYaml . | nindent 6 }}
       {{- end }}
-
-

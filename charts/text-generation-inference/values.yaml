@@ -11,7 +11,7 @@ commonLabels: {}
 deployment:
   image:
     repository: ghcr.io/huggingface/text-generation-inference
-    tag: sha-96b7b40
+    # tag: sha-96b7b40
     pullPolicy: IfNotPresent
 
   labels: {}
