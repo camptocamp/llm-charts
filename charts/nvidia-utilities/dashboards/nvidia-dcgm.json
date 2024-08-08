@@ -716,7 +716,10 @@
   ],
   "refresh": false,
   "schemaVersion": 39,
-  "tags": [],
+  "tags": [
+    "GPU",
+    "NVIDIA"
+  ],
   "templating": {
     "list": [
       {
