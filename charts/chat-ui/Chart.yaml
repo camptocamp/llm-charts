@@ -1,0 +1,10 @@
+apiVersion: v2
+name: chat-ui
+version: 0.1.0
+appVersion: 0.9.2
+description:
+  A Helm chart for deploying the Hugging Face Chat UI app on a Kubernetes cluster.
+dependencies:
+  - name: mongodb
+    repository: https://charts.bitnami.com/bitnami
+    version: 15.6.18

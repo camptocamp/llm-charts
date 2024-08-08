@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "chat-ui.fullname" . }}
+  namespace: {{ template "chat-ui.namespace" .}}
+  labels:
+    {{- include "chat-ui.labels" . | nindent 4 }}
+    {{- with .Values.deployment.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  annotations:
+    {{- with .Values.deployment.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  replicas: 1 # TODO Variabilize and even add autoscaling
+  selector:
+    matchLabels:
+      {{- include "chat-ui.selectorLabels" . | nindent 6 }}
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        {{- include "chat-ui.labels" . | nindent 8 }}
+        {{- with .Values.deployment.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      annotations:
+        {{- with .Values.deployment.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      containers:
+      - name: chat-ui
+        image: {{ .Values.deployment.image.repository }}:{{ .Values.deployment.image.tag | default .Chart.AppVersion }}
+        imagePullPolicy: {{ .Values.deployment.image.pullPolicy }}
+        readinessProbe:
+          failureThreshold: 30
+          periodSeconds: 10
+          httpGet:
+            path: /healthcheck
+            port: 3000
+            # path: {{ $.Values.envVars.APP_BASE | default "" }}/healthcheck
+            # port: {{ $.Values.envVars.APP_PORT | default 3000 | int }}
+        livenessProbe:
+          failureThreshold: 30
+          periodSeconds: 10
+          httpGet:
+            path: /healthcheck
+            port: 3000
+            # path: {{ $.Values.envVars.APP_BASE | default "" }}/healthcheck
+            # port: {{ $.Values.envVars.APP_PORT | default 3000 | int }}
+        ports:
+        - containerPort: 3000
+          name: http
+          protocol: TCP
+        # TODO Add conditional to activate metrics
+        # - containerPort: 5565
+        #   name: metrics
+        #   protocol: TCP
+        resources:
+          {{- toYaml .Values.deployment.resources | nindent 10 }}
+

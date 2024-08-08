@@ -1,5 +1,33 @@
+nameOverride: chat-ui
 
-image: 
+fullnameOverride: ""
 
+namespaceOverride: ""
+
+instanceLabelOverride: ""
+
+commonLabels: {}
+
+deployment:
+  image:
+    repository: ghcr.io/huggingface/chat-ui
+    # tag: sha-d7b02af
+    pullPolicy: IfNotPresent
+
+  labels: {}
+
+  podLabels: {}
+
+  annotations: {}
+
+  podAnnotations: {}
+
+  resources: {}
+
+  tolerations: []
+
+  affinity: {}
+
+# TODO
 ingress:
   enabled: false
