@@ -60,4 +60,7 @@ huggingFaceToken:
   secretKey: token
 
 grafana_dashboard:
-    enabled: true
+  enabled: true
+
+ingress:
+  enabled: true
