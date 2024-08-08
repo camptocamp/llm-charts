@@ -18,7 +18,6 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 28,
   "links": [],
   "panels": [
     {
@@ -667,8 +666,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -739,8 +737,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -824,8 +821,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -895,8 +891,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -954,7 +949,14 @@
   ],
   "refresh": "5s",
   "schemaVersion": 39,
-  "tags": [],
+  "tags": [
+    "Open Weights",
+    "LLM",
+    "Llama 3",
+    "llama.cpp",
+    "Exoscale",
+    "SKS"
+  ],
   "templating": {
     "list": []
   },
@@ -966,6 +968,6 @@
   "timezone": "browser",
   "title": "llama.cpp",
   "uid": "fdtzxgskowsg0f",
-  "version": 1,
+  "version": 2,
   "weekStart": ""
 }
