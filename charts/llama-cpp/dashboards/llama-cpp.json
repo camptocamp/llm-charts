@@ -18,7 +18,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 27,
+  "id": 28,
   "links": [],
   "panels": [
     {
@@ -40,7 +40,7 @@
           "showLineNumbers": false,
           "showMiniMap": false
         },
-        "content": "# Hosted LLM\n\nThis dashboard is part of the AI initiative at Camptocamp IS (#is-ai) to host a LLM (Meta-Llama-3-8B-Instruct) on a souvereign cloud provider (Exoscale). The application is llama.cpp.\n\n",
+        "content": "# Meta-Llama-3-8B-Instruct (via llama.cpp) on Exoscale (SKS)\n\nThis dashboard is part of the AI initiative at Camptocamp IS (#is-ai) to host an Open Weights LLM on a souvereign cloud provider. \n\n",
         "mode": "markdown"
       },
       "pluginVersion": "10.4.0",
@@ -323,7 +323,7 @@
           "useBackend": false
         }
       ],
-      "title": "Requests Total",
+      "title": "Requests Total (last 24h)",
       "type": "stat"
     },
     {
@@ -334,9 +334,9 @@
         "x": 0,
         "y": 13
       },
-      "id": 12,
+      "id": 20,
       "panels": [],
-      "title": "Tokens Predicted and Prompts",
+      "title": "Throughput",
       "type": "row"
     },
     {
@@ -372,11 +372,10 @@
         "x": 0,
         "y": 14
       },
-      "id": 4,
+      "id": 9,
       "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
+        "minVizHeight": 75,
+        "minVizWidth": 75,
         "orientation": "auto",
         "reduceOptions": {
           "calcs": [
@@ -385,9 +384,9 @@
           "fields": "",
           "values": false
         },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto"
       },
       "pluginVersion": "10.4.0",
       "targets": [
@@ -398,7 +397,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "llamacpp:tokens_predicted_total",
+          "expr": "llamacpp:prompt_tokens_seconds",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -408,8 +407,8 @@
           "useBackend": false
         }
       ],
-      "title": "Tokens Predicted Total",
-      "type": "stat"
+      "title": "Average prompt throughput in tokens/s",
+      "type": "gauge"
     },
     {
       "datasource": {
@@ -443,6 +442,90 @@
         "w": 6,
         "x": 6,
         "y": 14
+      },
+      "id": 7,
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto"
+      },
+      "pluginVersion": "10.4.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P5DCFC7561CCDE821"
+          },
+          "disableTextWrap": false,
+          "editorMode": "builder",
+          "expr": "llamacpp:predicted_tokens_seconds",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "Average generation throughput in tokens/s",
+      "type": "gauge"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 19
+      },
+      "id": 12,
+      "panels": [],
+      "title": "Processed prompts and generations",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P5DCFC7561CCDE821"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 6,
+        "x": 0,
+        "y": 20
       },
       "id": 1,
       "options": {
@@ -481,151 +564,8 @@
           "useBackend": false
         }
       ],
-      "title": "Prompt Tokens Total",
+      "title": "Number of prompt tokens processed",
       "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "P5DCFC7561CCDE821"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 5,
-        "w": 6,
-        "x": 12,
-        "y": 14
-      },
-      "id": 3,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
-      },
-      "pluginVersion": "10.4.0",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "P5DCFC7561CCDE821"
-          },
-          "disableTextWrap": false,
-          "editorMode": "builder",
-          "expr": "llamacpp:tokens_predicted_seconds_total",
-          "fullMetaSearch": false,
-          "includeNullMetadata": true,
-          "instant": false,
-          "legendFormat": "__auto",
-          "range": true,
-          "refId": "A",
-          "useBackend": false
-        }
-      ],
-      "title": "Token Predicted Seconds Total",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "P5DCFC7561CCDE821"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 5,
-        "w": 6,
-        "x": 0,
-        "y": 19
-      },
-      "id": 7,
-      "options": {
-        "minVizHeight": 75,
-        "minVizWidth": 75,
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showThresholdLabels": false,
-        "showThresholdMarkers": true,
-        "sizing": "auto"
-      },
-      "pluginVersion": "10.4.0",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "P5DCFC7561CCDE821"
-          },
-          "disableTextWrap": false,
-          "editorMode": "builder",
-          "expr": "llamacpp:predicted_tokens_seconds",
-          "fullMetaSearch": false,
-          "includeNullMetadata": true,
-          "instant": false,
-          "legendFormat": "__auto",
-          "range": true,
-          "refId": "A",
-          "useBackend": false
-        }
-      ],
-      "title": "Predicted Tokens Seconds",
-      "type": "gauge"
     },
     {
       "datasource": {
@@ -658,7 +598,92 @@
         "h": 5,
         "w": 6,
         "x": 6,
-        "y": 19
+        "y": 20
+      },
+      "id": 4,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P5DCFC7561CCDE821"
+          },
+          "disableTextWrap": false,
+          "editorMode": "builder",
+          "expr": "llamacpp:tokens_predicted_total",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "Number of generation tokens processed",
+      "type": "stat"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 25
+      },
+      "id": 21,
+      "panels": [],
+      "title": "Process time for prompts and generations",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P5DCFC7561CCDE821"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 6,
+        "x": 0,
+        "y": 26
       },
       "id": 2,
       "options": {
@@ -696,7 +721,7 @@
           "useBackend": false
         }
       ],
-      "title": "Prompt Seconds Total",
+      "title": "Prompt process time",
       "type": "stat"
     },
     {
@@ -729,13 +754,14 @@
       "gridPos": {
         "h": 5,
         "w": 6,
-        "x": 12,
-        "y": 19
+        "x": 6,
+        "y": 26
       },
-      "id": 9,
+      "id": 3,
       "options": {
-        "minVizHeight": 75,
-        "minVizWidth": 75,
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
           "calcs": [
@@ -744,9 +770,9 @@
           "fields": "",
           "values": false
         },
-        "showThresholdLabels": false,
-        "showThresholdMarkers": true,
-        "sizing": "auto"
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
       },
       "pluginVersion": "10.4.0",
       "targets": [
@@ -757,7 +783,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "llamacpp:prompt_tokens_seconds",
+          "expr": "llamacpp:tokens_predicted_seconds_total",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -767,8 +793,8 @@
           "useBackend": false
         }
       ],
-      "title": "Prompt Tokens Seconds",
-      "type": "gauge"
+      "title": "Predict process time",
+      "type": "stat"
     },
     {
       "collapsed": false,
@@ -776,7 +802,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 24
+        "y": 31
       },
       "id": 14,
       "panels": [],
@@ -814,7 +840,7 @@
         "h": 5,
         "w": 6,
         "x": 0,
-        "y": 25
+        "y": 32
       },
       "id": 5,
       "options": {
@@ -851,7 +877,7 @@
           "useBackend": false
         }
       ],
-      "title": "KV Cache Tokens",
+      "title": "KV-cache tokens",
       "type": "gauge"
     },
     {
@@ -885,7 +911,7 @@
         "h": 5,
         "w": 6,
         "x": 6,
-        "y": 25
+        "y": 32
       },
       "id": 6,
       "options": {
@@ -922,7 +948,7 @@
           "useBackend": false
         }
       ],
-      "title": "KV Cache Usage Ratio",
+      "title": "KV-cache usage. 1 means 100 percent usage.",
       "type": "gauge"
     }
   ],
@@ -933,13 +959,13 @@
     "list": []
   },
   "time": {
-    "from": "now-6h",
+    "from": "now-30m",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "browser",
   "title": "llama.cpp",
   "uid": "fdtzxgskowsg0f",
-  "version": 2,
+  "version": 1,
   "weekStart": ""
 }
