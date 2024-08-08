@@ -953,9 +953,7 @@
     "Open Weights",
     "LLM",
     "Llama 3",
-    "llama.cpp",
-    "Exoscale",
-    "SKS"
+    "llama.cpp"
   ],
   "templating": {
     "list": []
