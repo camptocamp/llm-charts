@@ -61,6 +61,3 @@ huggingFaceToken:
 
 grafana_dashboard:
   enabled: true
-
-ingress:
-  enabled: true
