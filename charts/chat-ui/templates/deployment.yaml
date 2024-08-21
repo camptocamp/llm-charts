@@ -44,16 +44,12 @@ spec:
           httpGet:
             path: /healthcheck
             port: 3000
-            # path: {{ $.Values.envVars.APP_BASE | default "" }}/healthcheck
-            # port: {{ $.Values.envVars.APP_PORT | default 3000 | int }}
         livenessProbe:
           failureThreshold: 30
           periodSeconds: 10
           httpGet:
             path: /healthcheck
             port: 3000
-            # path: {{ $.Values.envVars.APP_BASE | default "" }}/healthcheck
-            # port: {{ $.Values.envVars.APP_PORT | default 3000 | int }}
         ports:
         - containerPort: 3000
           name: http
