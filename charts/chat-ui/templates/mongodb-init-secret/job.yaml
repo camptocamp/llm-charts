@@ -49,7 +49,7 @@ spec:
 
           # If secret already exists, kubectl command returns 0 which means it succeded and we enter the if branch.
           if kubectl get secret mongodb-init-secret > /dev/null; then
-            echo "Secret `mongodb-init-secret` already exists, skipping secret creation";
+            echo "Secret 'mongodb-init-secret' already exists, skipping secret creation";
             exit 0;
           else
             kubectl create secret generic mongodb-init-secret \
@@ -59,7 +59,7 @@ spec:
           fi
 
           if kubectl get secret mongodb-url-secret > /dev/null; then
-            echo "Secret `mongodb-url-secret` already exists, skipping secret creation";
+            echo "Secret 'mongodb-url-secret' already exists, skipping secret creation";
             exit 0;
           else
             kubectl create secret generic mongodb-url-secret \
