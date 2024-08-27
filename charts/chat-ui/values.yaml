@@ -133,7 +133,7 @@ mongodbSecretInit:
   # -- Enable an init job to create a secret containing credentials to access the MongoDB database. If disabled, the secret must be created another way.
   enabled: true
   
-  name: ""
+  name: "mongodb-secret-init"
 
   image:
     repository: ""
