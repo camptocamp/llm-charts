@@ -51,9 +51,9 @@ spec:
             export MONGODB_ROOT_PASSWORD=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32);
             export MONGODB_PASSWORD=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32);
             kubectl create secret generic mongodb-init-secret \
-              --from-literal=MONGODB_ROOT_PASSWORD=$MONGODB_ROOT_PASSWORD
-              --from-literal=MONGODB_DATABASE=chat-ui;
-              --from-literal=MONGODB_USERNAME=chat-ui;
+              --from-literal=MONGODB_ROOT_PASSWORD=$MONGODB_ROOT_PASSWORD \
+              --from-literal=MONGODB_DATABASE=chat-ui \
+              --from-literal=MONGODB_USERNAME=chat-ui \
               --from-literal=MONGODB_PASSWORD=[$MONGODB_PASSWORD];
           fi
 
