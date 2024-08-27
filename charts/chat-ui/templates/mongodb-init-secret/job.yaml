@@ -44,7 +44,7 @@ spec:
           /bin/bash << 'EOF'
 
           # If secret already exists, kubectl command returns 0.
-          if ! kubectl get secret mongodb-init-secret; then
+          if kubectl get secret mongodb-init-secret; then
             echo "Secret already exists, skipping secret creation";
             exit 0;
           else
