@@ -42,22 +42,27 @@ Define shared selector labels,
 This is an immutable field: this should not change between upgrade 
 */}}
 {{- define "chat-ui.selectorLabels" -}}
-app.kubernetes.io/name: {{ template "chat-ui.name" . }}
-app.kubernetes.io/instance: {{ template "chat-ui.instance-name" . }}
+{{- if .name -}}
+app.kubernetes.io/name: {{ include "chat-ui.name" .context }}-{{ .name }}
+{{ end -}}
+app.kubernetes.io/instance: {{ include "chat-ui.instance-name" .context }}
+{{- if .component }}
+app.kubernetes.io/component: {{ .component }}
+{{- end }}
 {{- end }}
 
 {{/*
 Define shared labels.
 */}}
 {{- define "chat-ui.labels" -}}
-{{ include "chat-ui.selectorLabels" . }}
-helm.sh/chart: {{ template "chat-ui.chart" . }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
-{{- with .Values.commonLabels }}
+helm.sh/chart: {{ include "chat-ui.chart" .context }}
+{{ include "chat-ui.selectorLabels" (dict "context" .context "component" .component "name" .name) }}
+app.kubernetes.io/managed-by: {{ .context.Release.Service }}
+app.kubernetes.io/part-of: chat-ui
+{{- with .context.Values.global.additionalLabels }}
 {{ toYaml . }}
 {{- end }}
 {{- end }}
-
 
 {{/*
 Construct the namespace for all namespaced resources.
@@ -70,4 +75,11 @@ Preserve the default behavior of the Release namespace if no override is provide
 {{- else -}}
 {{- .Release.Namespace -}}
 {{- end -}}
+{{- end -}}
+
+{{/*
+Create MongoDB secret-init name.
+*/}}
+{{- define "chat-ui.mongodbSecretInit.fullname" -}}
+{{- printf "%s-%s" (include "chat-ui.fullname" .) .Values.mongodbSecretInit.name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}

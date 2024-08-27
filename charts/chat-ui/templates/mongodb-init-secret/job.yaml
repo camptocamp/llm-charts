@@ -1,0 +1,75 @@
+{{- if and .Values.mongodbSecretInit.enabled (not .Values.externalMongodb.host) }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ template "chat-ui.mongodbSecretInit.fullname" . }}
+  namespace: {{ template  "chat-ui.namespace" . }}
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-delete-policy": before-hook-creation
+    {{- range $key, $value := .Values.mongodbSecretInit.jobAnnotations }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+  labels:
+    {{- include "chat-ui.labels" (dict "context" . "component" .Values.mongodbSecretInit.name "name" .Values.mongodbSecretInit.name) | nindent 4 }}
+spec:
+  ttlSecondsAfterFinished: 60
+  template:
+    metadata:
+      labels:
+        {{- include "chat-ui.labels" (dict "context" . "component" .Values.mongodbSecretInit.name "name" .Values.mongodbSecretInit.name) | nindent 8 }}
+        {{- with (mergeOverwrite (deepCopy .Values.global.podLabels) .Values.mongodbSecretInit.podLabels) }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
+      {{- with (mergeOverwrite (deepCopy .Values.global.podAnnotations) .Values.mongodbSecretInit.podAnnotations) }}
+      annotations:
+        {{- range $key, $value := . }}
+        {{ $key }}: {{ $value | quote }}
+        {{- end }}
+      {{- end }}
+    spec:
+      {{- with .Values.global.imagePullSecrets }}
+      imagePullSecrets:
+        {{ toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+      # Note that root password is also created, otherwise root access will be available without authentication by default.
+      - command:
+        {{- if .Values.mongodbSecretInit.commandOverride }}
+        {{- toYaml .Values.mongodbSecretInit.commandOverride | nindent 8 }}
+        {{- else}}
+        - bash
+        - -c
+        - >-
+          export ROOT_PASSWORD=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32);
+          export CHATUI_PASSWORD=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32);
+          kubectl create secret generic mongodb-init-secret --from-literal=mongodb-root-password=$ROOT_PASSWORD --from-literal=mongodb-passwords=[$CHATUI_PASSWORD];
+        {{- end }}
+        image: {{ .Values.mongodbSecretInit.image.repository | default "bitnami/kubectl" }}:{{ .Values.mongodbSecretInit.image.tag | default (printf "%s.%s" .Capabilities.KubeVersion.Major .Capabilities.KubeVersion.Minor) }}
+        imagePullPolicy: {{ .Values.mongodbSecretInit.image.imagePullPolicy }}
+        name: secret-init
+        resources:
+          {{- toYaml .Values.mongodbSecretInit.resources | nindent 10 }}
+        {{- with .Values.mongodbSecretInit.containerSecurityContext }}
+        securityContext:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+      {{- with .Values.mongodbSecretInit.securityContext | default .Values.global.securityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: OnFailure
+      {{- with .Values.mongodbSecretInit.tolerations | default .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.mongodbSecretInit.affinity | default .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.mongodbSecretInit.nodeSelector | default .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "chat-ui.mongodbSecretInit.fullname" . }}
+{{- end }}

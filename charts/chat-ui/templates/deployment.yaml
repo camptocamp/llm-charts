@@ -2,42 +2,68 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ template "chat-ui.fullname" . }}
-  namespace: {{ template "chat-ui.namespace" .}}
+  namespace: {{ template "chat-ui.namespace" . }}
   labels:
-    {{- include "chat-ui.labels" . | nindent 4 }}
-    {{- with .Values.deployment.labels }}
+    {{- include "chat-ui.labels" (dict "context" . "component" .Values.chatui.name "name" .Values.chatui.name) | nindent 4 }}
+    {{- with (mergeOverwrite (deepCopy .Values.global.deploymentLabels) .Values.chatui.deploymentLabels) }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
+  {{- with (mergeOverwrite (deepCopy .Values.global.deploymentAnnotations) .Values.chatui.deploymentAnnotations) }}
   annotations:
-    {{- with .Values.deployment.annotations }}
     {{- toYaml . | nindent 4 }}
-    {{- end }}
+  {{- end }}
 spec:
-  replicas: 1 # TODO Variabilize and even add autoscaling
+  {{- with (mergeOverwrite (deepCopy .Values.global.deploymentStrategy) .Values.chatui.deploymentStrategy) }}
+  strategy:
+    {{- trim . | nindent 4 }}
+  {{- end }}
+  revisionHistoryLimit: {{ .Values.global.revisionHistoryLimit }}
+  replicas: 1 # TODO Variabilize and even add autoscaling -> https://github.com/argoproj/argo-helm/blob/8c0b68689540eb276ac92d921b2326e706a7ba7f/charts/argo-cd/templates/argocd-server/deployment.yaml#L19
   selector:
     matchLabels:
-      {{- include "chat-ui.selectorLabels" . | nindent 6 }}
-  strategy:
-    rollingUpdate:
-      maxSurge: 25%
-      maxUnavailable: 25%
-    type: RollingUpdate
+      {{- include "chat-ui.selectorLabels" (dict "context" . "name" .Values.chatui.name) | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "chat-ui.labels" . | nindent 8 }}
-        {{- with .Values.deployment.podLabels }}
+        {{- include "chat-ui.labels" (dict "context" . "component" .Values.chatui.name "name" .Values.chatui.name) | nindent 8 }}
+        {{- with (mergeOverwrite (deepCopy .Values.global.podLabels) .Values.chatui.podLabels) }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
+      {{- with (mergeOverwrite (deepCopy .Values.global.podAnnotations) .Values.chatui.podAnnotations) }}
       annotations:
-        {{- with .Values.deployment.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      {{- with .Values.global.hostAliases }}
+      hostAliases:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.global.securityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+      - name: {{ .Values.chatui.name | default "chat-ui" }}
+        image: {{ .Values.chatui.image.repository }}:{{ .Values.chatui.image.tag | default .Chart.AppVersion }}
+        imagePullPolicy: {{ .Values.chatui.image.imagePullPolicy | default .Values.global.imagePullPolicy }}
+        env:
+        - name: HF_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.huggingFaceToken.secretName }}
+              key: {{ .Values.huggingFaceToken.secretKey }}
+        {{- if and .Values.mongodb.enabled (not .Values.externalMongodb.host) }}
+        - name: MONGODB_URL
+          value: {{ printf "mongodb://%s-mongodb:27017" .Release.Name | quote }}
+        {{- else if and (not .Values.mongodb.enabled) .Values.externalMongodb.host }}
+        - name: MONGODB_URL
+          value: {{ printf "mongodb://%s:%d" .Values.externalMongodb.host .Values.externalMongodb.port | quote }}
+        {{- else }}
+        {{- fail "Either enable embedded MongoDB or provide an external MongoDB host" }}
+        {{- end }}
+        {{- with .Values.chatui.extraEnv }} # TODO Check if its not better to use a range instead
         {{- toYaml . | nindent 8 }}
         {{- end }}
-    spec:
-      containers:
-      - name: chat-ui
-        image: {{ .Values.deployment.image.repository }}:{{ .Values.deployment.image.tag | default .Chart.AppVersion }}
-        imagePullPolicy: {{ .Values.deployment.image.pullPolicy }}
         readinessProbe:
           failureThreshold: 30
           periodSeconds: 10
@@ -59,5 +85,16 @@ spec:
         #   name: metrics
         #   protocol: TCP
         resources:
-          {{- toYaml .Values.deployment.resources | nindent 10 }}
-
+          {{- toYaml .Values.chatui.resources | nindent 10 }}
+      {{- with .Values.chatui.nodeSelector | default .Values.global.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.chatui.affinity | default .Values.global.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.chatui.tolerations | default .Values.global.tolerations }}
+      tolerations:
+      {{- toYaml . | nindent 6 }}
+      {{- end }}

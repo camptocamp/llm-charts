@@ -1,3 +1,4 @@
+# TODO Add missing comments
 nameOverride: chat-ui
 
 fullnameOverride: ""
@@ -6,28 +7,198 @@ namespaceOverride: ""
 
 instanceLabelOverride: ""
 
-commonLabels: {}
+global:
+  # -- Number of old deployment ReplicaSets to retain. The rest will be garbage collected.
+  revisionHistoryLimit: 3
 
-deployment:
+  # -- If defined, a imagePullPolicy applied to all Argo CD deployments.
+  imagePullPolicy: IfNotPresent
+
+  # -- Secrets with credentials to pull images from a private registry.
+  imagePullSecrets: []
+
+  # -- Common labels for the all resources.
+  additionalLabels: {}
+    # app: chat-ui
+
+  # -- Labels for the all deployed Deployments.
+  deploymentLabels: {}
+
+  # -- Labels for the all deployed pods.
+  podLabels: {}
+
+  # -- Annotations for the all deployed Deployments.
+  deploymentAnnotations: {}
+
+  # -- Annotations for the all deployed Pods.
+  podAnnotations: {}
+
+  # -- Toggle and define pod-level security context.
+  # @default -- `{}` (See [values.yaml])
+  securityContext: {}
+  #  runAsUser: 999
+  #  runAsGroup: 999
+  #  fsGroup: 999
+
+  # -- Mapping between IP and hostnames that will be injected as entries in the pod's hosts files.
+  hostAliases: []
+  # - ip: 10.20.30.40
+  #   hostnames:
+  #   - git.myhostname
+
+  # -- Node selector for all resources. If both nodeSelector and affinity are set, they must both match for the pod to be scheduled onto a node.
+  nodeSelector: {}
+
+  # -- Affinity for all resources. If both nodeSelector and affinity are set, they must both match for the pod to be scheduled onto a node.
+  affinity: {}
+
+  # -- Tolerations for all resources.
+  tolerations: []
+
+  # -- Deployment strategy for the all deployed Deployments.
+  deploymentStrategy: {}
+    # type: RollingUpdate
+    # rollingUpdate:
+    #   maxSurge: 25%
+    #   maxUnavailable: 25%
+
+chatui:
+  name: chat-ui
+
   image:
     repository: ghcr.io/huggingface/chat-ui
     # tag: sha-d7b02af
-    pullPolicy: IfNotPresent
+    imagePullPolicy: IfNotPresent
 
-  labels: {}
+  extraEnv: []
+
+  deploymentLabels: {}
 
   podLabels: {}
 
-  annotations: {}
+  deploymentAnnotations: {}
 
   podAnnotations: {}
 
   resources: {}
+    # requests:
+    #   cpu: 100m
+    #   memory: 2Gi
+    # limits:
+    #   # Recommended to use large limits when web search is enabled
+    #   cpu: "4"
+    #   memory: 6Gi
 
   tolerations: []
 
+  nodeSelector: {}
+
   affinity: {}
 
+  deploymentStrategy: {}
+
+  # TODO
+  replicas: 1
+
+  # TODO
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 2
+    targetMemoryUtilizationPercentage: ""
+    targetCPUUtilizationPercentage: ""
+
+  # TODO
+  metrics:
+    enabled: false
+
+  # TODO
+  ingress:
+    enabled: false
+
 # TODO
-ingress:
+networkPolicy:
   enabled: false
+
+huggingFaceToken:
+  secretName: hugging-face-token
+  secretKey: token
+
+# TODO
+externalMongodb:
+  host: ""
+  port: 27017
+
+mongodbSecretInit:
+  # -- Enable an init job to create a secret containing credentials to access the MongoDB database. If disabled, the secret must be created another way.
+  enabled: true
+  
+  name: ""
+
+  image:
+    repository: ""
+    tag: ""
+    imagePullPolicy: IfNotPresent
+
+  # -- Override the default command for the init job. If not set, a default command will be used to create the secret.
+  commandOverride: []
+  # - bash
+  # - -c
+  # - >-
+  #   head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32 > /tmp/root-password;
+  #   head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32 > /tmp/chatui-password;
+  #   echo "[ \"$(cat /tmp/chatui-password) \"]"" > /tmp/user-password-list;
+  #   kubectl create secret generic mongodb-init-secret --from-file=mongodb-root-password=/tmp/root-password --from-file=mongodb-passwords=/tmp/user-password-list;
+
+  podLabels: {}
+
+  podAnnotations: {}
+  
+  jobAnnotations: {}
+
+  resources: {}
+
+  containerSecurityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
+    readOnlyRootFilesystem: true
+    runAsNonRoot: true
+    seccompProfile:
+      type: RuntimeDefault
+
+  tolerations: []
+
+  nodeSelector: {}
+
+  affinity: {}
+
+# -- Configuration values for the MongoDB Helm chart used as a dependency.
+mongodb:
+  enabled: true
+
+  # -- Deployment mode for MongoDB. This can be standalone or replicaset. WARNING: replicaset mode is not supported by our chart.
+  architecture: standalone
+
+  auth:
+    enabled: true
+
+    # -- List of MongoDB users. Each username must have a corresponding password in the `mongodb-passwords` list on the secret passed in `existingSecret`.
+    usernames:
+    - chat-ui
+
+    databases:
+    - chat-ui
+
+    # -- Existing secret containing the MongoDB root password and the passwords for the users defined in `auth.usernames`. By default, it is the name of the secret created by the `mongodb-secret-init` job.
+    existingSecret: mongodb-init-secret
+
+  # TODO To test this
+  tls:
+    enabled: true
+    autoGenerated: true
+
+  # TODO
+  metrics:
+    enabled: false
