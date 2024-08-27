@@ -50,8 +50,8 @@ spec:
         - name: HF_TOKEN
           valueFrom:
             secretKeyRef:
-              name: {{ .Values.huggingFaceToken.secretName }}
-              key: {{ .Values.huggingFaceToken.secretKey }}
+              name: {{ .Values.chatui.huggingFaceToken.secretName }}
+              key: {{ .Values.chatui.huggingFaceToken.secretKey }}
         {{- if and .Values.mongodb.enabled (not .Values.externalMongodb.host) }}
         - name: MONGODB_URL
           value: {{ printf "mongodb://%s-mongodb:27017" .Release.Name | quote }}
@@ -61,6 +61,19 @@ spec:
         {{- else }}
         {{- fail "Either enable embedded MongoDB or provide an external MongoDB host" }}
         {{- end }}
+        - name: MONGODB_DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.chatui.mongodbSecretName | default "mongodb-init-secret" }}
+        - name: MONGODB_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.chatui.mongodbSecretName | default "mongodb-init-secret" }}
+        - name: MONGODB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.chatui.mongodbSecretName | default "mongodb-init-secret" }}
+              key: mongodb-passwords
         {{- with .Values.chatui.extraEnv }} # TODO Check if its not better to use a range instead
         {{- toYaml . | nindent 8 }}
         {{- end }}

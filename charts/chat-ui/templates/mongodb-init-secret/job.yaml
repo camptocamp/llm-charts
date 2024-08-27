@@ -1,4 +1,4 @@
-{{- if and .Values.mongodbSecretInit.enabled (not .Values.externalMongodb.host) }}
+{{- if and .Values.mongodbSecretInit.enabled (not .Values.chatui.externalMongodb.host) (not .Values.chatui.mongodbSecretName) }}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -48,9 +48,13 @@ spec:
             echo "Secret already exists, skipping secret creation";
             exit 0;
           else
-            export ROOT_PASSWORD=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32);
-            export CHATUI_PASSWORD=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32);
-            kubectl create secret generic mongodb-init-secret --from-literal=mongodb-root-password=$ROOT_PASSWORD --from-literal=mongodb-passwords=[$CHATUI_PASSWORD];
+            export MONGODB_ROOT_PASSWORD=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32);
+            export MONGODB_PASSWORD=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32);
+            kubectl create secret generic mongodb-init-secret \
+              --from-literal=MONGODB_ROOT_PASSWORD=$MONGODB_ROOT_PASSWORD
+              --from-literal=MONGODB_DATABASE=chat-ui;
+              --from-literal=MONGODB_USERNAME=chat-ui;
+              --from-literal=MONGODB_PASSWORD=[$MONGODB_PASSWORD];
           fi
 
           EOF

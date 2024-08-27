@@ -116,18 +116,20 @@ chatui:
   ingress:
     enabled: false
 
+  huggingFaceToken:
+    secretName: hugging-face-token
+    secretKey: token
+
+  mongodbSecretName: ""
+
+# TODO
+  externalMongodb:
+    host: ""
+    port: 27017
+
 # TODO
 networkPolicy:
   enabled: false
-
-huggingFaceToken:
-  secretName: hugging-face-token
-  secretKey: token
-
-# TODO
-externalMongodb:
-  host: ""
-  port: 27017
 
 mongodbSecretInit:
   # -- Enable an init job to create a secret containing credentials to access the MongoDB database. If disabled, the secret must be created another way.
@@ -145,10 +147,7 @@ mongodbSecretInit:
   # - bash
   # - -c
   # - >-
-  #   head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32 > /tmp/root-password;
-  #   head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32 > /tmp/chatui-password;
-  #   echo "[ \"$(cat /tmp/chatui-password) \"]"" > /tmp/user-password-list;
-  #   kubectl create secret generic mongodb-init-secret --from-file=mongodb-root-password=/tmp/root-password --from-file=mongodb-passwords=/tmp/user-password-list;
+  #   your command here
 
   podLabels: {}
 
@@ -184,15 +183,7 @@ mongodb:
   auth:
     enabled: true
 
-    # -- List of MongoDB users. Each username must have a corresponding password in the `mongodb-passwords` list on the secret passed in `existingSecret`.
-    usernames:
-    - chat-ui
-
-    databases:
-    - chat-ui
-
-    # -- Existing secret containing the MongoDB root password and the passwords for the users defined in `auth.usernames`. By default, it is the name of the secret created by the `mongodb-secret-init` job.
-    existingSecret: mongodb-init-secret
+  extraEnvVarsSecret: "mongodb-init-secret"
 
   # TODO To test this
   tls:
