@@ -116,16 +116,13 @@ chatui:
   ingress:
     enabled: false
 
+  mongodbUrl:
+    secretName: ""
+    secretKey: MONGODB_URL
+
   huggingFaceToken:
     secretName: hugging-face-token
     secretKey: token
-
-  mongodbSecretName: ""
-
-# TODO
-  externalMongodb:
-    host: ""
-    port: 27017
 
 # TODO
 networkPolicy:
@@ -179,6 +176,9 @@ mongodb:
 
   # -- Deployment mode for MongoDB. This can be standalone or replicaset. WARNING: replicaset mode is not supported by our chart.
   architecture: standalone
+
+  service:
+    nameOverride: chat-ui-mongodb
 
   auth:
     enabled: true

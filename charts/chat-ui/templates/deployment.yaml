@@ -52,28 +52,15 @@ spec:
             secretKeyRef:
               name: {{ .Values.chatui.huggingFaceToken.secretName }}
               key: {{ .Values.chatui.huggingFaceToken.secretKey }}
-        {{- if and .Values.mongodb.enabled (not .Values.chatui.externalMongodb.host) }}
+        {{- if or .Values.mongodbSecretInit.enabled .Values.chatui.mongodbUrl.secretName }}
         - name: MONGODB_URL
-          value: {{ printf "mongodb://%s-mongodb:27017" .Release.Name | quote }}
-        {{- else if and (not .Values.mongodb.enabled) .Values.chatui.externalMongodb.host }}
-        - name: MONGODB_URL
-          value: {{ printf "mongodb://%s:%d" .Values.chatui.externalMongodb.host .Values.chatui.externalMongodb.port | quote }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.chatui.mongodbUrl.secretName | default "mongodb-url-secret" }}
+              key: {{ .Values.chatui.mongodbUrl.secretKey | default "MONGODB_URL" }}
         {{- else }}
-        {{- fail "Either enable embedded MongoDB or provide an external MongoDB host" }}
+        {{- fail "Either enable embedded MongoDB or provide an external MongoDB host through a secret." }}
         {{- end }}
-        - name: MONGODB_DATABASE
-          valueFrom:
-            secretKeyRef:
-              name: {{ .Values.chatui.mongodbSecretName | default "mongodb-init-secret" }}
-        - name: MONGODB_USERNAME
-          valueFrom:
-            secretKeyRef:
-              name: {{ .Values.chatui.mongodbSecretName | default "mongodb-init-secret" }}
-        - name: MONGODB_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: {{ .Values.chatui.mongodbSecretName | default "mongodb-init-secret" }}
-              key: mongodb-passwords
         {{- with .Values.chatui.extraEnv }} # TODO Check if its not better to use a range instead
         {{- toYaml . | nindent 8 }}
         {{- end }}

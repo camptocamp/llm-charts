@@ -1,4 +1,4 @@
-{{- if and .Values.mongodbSecretInit.enabled (not .Values.chatui.externalMongodb.host) (not .Values.chatui.mongodbSecretName) }}
+{{- if and .Values.mongodbSecretInit.enabled (not .Values.chatui.mongodbUrl.secretName) }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
