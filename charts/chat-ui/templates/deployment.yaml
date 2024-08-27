@@ -52,12 +52,12 @@ spec:
             secretKeyRef:
               name: {{ .Values.chatui.huggingFaceToken.secretName }}
               key: {{ .Values.chatui.huggingFaceToken.secretKey }}
-        {{- if and .Values.mongodb.enabled (not .Values.externalMongodb.host) }}
+        {{- if and .Values.mongodb.enabled (not .Values.chatui.externalMongodb.host) }}
         - name: MONGODB_URL
           value: {{ printf "mongodb://%s-mongodb:27017" .Release.Name | quote }}
-        {{- else if and (not .Values.mongodb.enabled) .Values.externalMongodb.host }}
+        {{- else if and (not .Values.mongodb.enabled) .Values.chatui.externalMongodb.host }}
         - name: MONGODB_URL
-          value: {{ printf "mongodb://%s:%d" .Values.externalMongodb.host .Values.externalMongodb.port | quote }}
+          value: {{ printf "mongodb://%s:%d" .Values.chatui.externalMongodb.host .Values.chatui.externalMongodb.port | quote }}
         {{- else }}
         {{- fail "Either enable embedded MongoDB or provide an external MongoDB host" }}
         {{- end }}
