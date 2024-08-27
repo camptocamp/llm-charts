@@ -15,7 +15,7 @@ rules:
     resources:
       - secrets
     resourceNames:
-      - {{ template "chat-ui.mongodbSecretInit.fullname" . }}
+      - mongodb-init-secret
     verbs:
       - get
   - apiGroups:
