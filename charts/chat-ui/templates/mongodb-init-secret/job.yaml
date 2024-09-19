@@ -43,6 +43,7 @@ spec:
         - |
           /bin/bash << 'EOF'
 
+          export MONGODB_ROOT_PASSWORD=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32);
           export MONGODB_DATABASE=chat-ui;
           export MONGODB_USERNAME=chat-ui;
           export MONGODB_PASSWORD=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32);
@@ -52,9 +53,8 @@ spec:
             echo "Secret 'mongodb-init-secret' already exists, skipping secret creation";
           else
             kubectl create secret generic mongodb-init-secret \
-              --from-literal=MONGODB_DATABASE=$MONGODB_DATABASE \
-              --from-literal=MONGODB_USERNAME=$MONGODB_USERNAME \
-              --from-literal=MONGODB_PASSWORD=$MONGODB_PASSWORD;
+              --from-literal=mongodb-root-password=$MONGODB_ROOT_PASSWORD \
+              --from-literal=mongodb-passwords=[$MONGODB_PASSWORD]; \
           fi
 
           if kubectl get secret mongodb-url-secret > /dev/null; then
