@@ -4,13 +4,12 @@ metadata:
   name: {{ template "text-generation-inference.fullname" . }}
   namespace: {{ template "text-generation-inference.namespace" .}}
   labels:
-    app.kubernetes.io/component: text-generation-inference
-    {{- include "text-generation-inference.labels" . | nindent 4 }}
+    {{- include "text-generation-inference.labels" (dict "context" . "component" .Values.tgi.name "name" .Values.tgi.name) | nindent 4 }}
 spec:
   resources:
     requests:
-      storage: {{ .Values.modelStorage.size }}
+      storage: {{ .Values.tgi.modelStorage.size }}
   accessModes:
-  {{- range .Values.modelStorage.accessModes }}
+  {{- range .Values.tgi.modelStorage.accessModes }}
     - {{ . | quote }}
   {{- end }}

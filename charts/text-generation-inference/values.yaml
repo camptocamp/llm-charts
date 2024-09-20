@@ -6,37 +6,115 @@ namespaceOverride: ""
 
 instanceLabelOverride: ""
 
-commonLabels: {}
+global:
+  # -- Number of old deployment ReplicaSets to retain. The rest will be garbage collected.
+  revisionHistoryLimit: 3
 
-deployment:
+  # -- If defined, a imagePullPolicy applied to all Argo CD deployments.
+  imagePullPolicy: IfNotPresent
+
+  # -- Secrets with credentials to pull images from a private registry.
+  imagePullSecrets: []
+
+  # -- Common labels for the all resources.
+  additionalLabels: {}
+    # app: chat-ui
+
+  # -- Labels for the all deployed Deployments.
+  deploymentLabels: {}
+
+  # -- Labels for the all deployed pods.
+  podLabels: {}
+
+  # -- Annotations for the all deployed Deployments.
+  deploymentAnnotations: {}
+
+  # -- Annotations for the all deployed Pods.
+  podAnnotations: {}
+
+  # -- Toggle and define pod-level security context.
+  # @default -- `{}` (See [values.yaml])
+  securityContext: {}
+  #  runAsUser: 999
+  #  runAsGroup: 999
+  #  fsGroup: 999
+
+  # -- Mapping between IP and hostnames that will be injected as entries in the pod's hosts files.
+  hostAliases: []
+  # - ip: 10.20.30.40
+  #   hostnames:
+  #   - git.myhostname
+
+  # -- Node selector for all resources. If both nodeSelector and affinity are set, they must both match for the pod to be scheduled onto a node.
+  nodeSelector: {}
+
+  # -- Affinity for all resources. If both nodeSelector and affinity are set, they must both match for the pod to be scheduled onto a node.
+  affinity: {}
+
+  # -- Tolerations for all resources.
+  tolerations: []
+
+  # -- Deployment strategy for the all deployed Deployments.
+  deploymentStrategy: {}
+    # type: RollingUpdate
+    # rollingUpdate:
+    #   maxSurge: 25%
+    #   maxUnavailable: 25%
+
+tgi:
+  name: text-generation-inference
+
   image:
     repository: ghcr.io/huggingface/text-generation-inference
     # tag: sha-96b7b40
     pullPolicy: IfNotPresent
 
-  labels: {}
+  extraEnv: []
+
+  deploymentLabels: {}
 
   podLabels: {}
 
-  annotations: {}
+  deploymentAnnotations: {}
 
   podAnnotations: {}
 
-  resources:
-    limits:
-      nvidia.com/gpu: 1
-    requests:
-      cpu: 2
-      memory: 5Gi
+  resources: {}
+    # requests:
+    #   cpu: 100m
+    #   memory: 2Gi
+    # limits:
+    #   # Recommended to use large limits when web search is enabled
+    #   cpu: "4"
+    #   memory: 6Gi
 
   tolerations: []
 
+  nodeSelector: {}
+
   affinity: {}
 
-model: meta-llama/Meta-Llama-3-8B-Instruct
+  deploymentStrategy: {}
 
-modelOptions:
-#   quantize: bitsandbytes
+  # TODO
+  replicas: 1
+
+  # TODO
+  metrics:
+    enabled: false
+
+  # TODO
+  ingress:
+    enabled: false
+
+  model: meta-llama/Meta-Llama-3-8B-Instruct
+
+  modelOptions:
+    # quantize: bitsandbytes
+
+  huggingFaceToken:
+    secretName: hugging-face-token
+    secretKey: token
 
 modelStorage:
   accessModes:

@@ -42,22 +42,27 @@ Define shared selector labels,
 This is an immutable field: this should not change between upgrade 
 */}}
 {{- define "text-generation-inference.selectorLabels" -}}
-app.kubernetes.io/name: {{ template "text-generation-inference.name" . }}
-app.kubernetes.io/instance: {{ template "text-generation-inference.instance-name" . }}
+{{- if .name -}}
+app.kubernetes.io/name: {{ include "text-generation-inference.name" .context }}-{{ .name }}
+{{ end -}}
+app.kubernetes.io/instance: {{ include "text-generation-inference.instance-name" .context }}
+{{- if .component }}
+app.kubernetes.io/component: {{ .component }}
+{{- end }}
 {{- end }}
 
 {{/*
 Define shared labels.
 */}}
 {{- define "text-generation-inference.labels" -}}
-{{ include "text-generation-inference.selectorLabels" . }}
-helm.sh/chart: {{ template "text-generation-inference.chart" . }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
-{{- with .Values.commonLabels }}
+helm.sh/chart: {{ include "text-generation-inference.chart" .context }}
+{{ include "text-generation-inference.selectorLabels" (dict "context" .context "component" .component "name" .name) }}
+app.kubernetes.io/managed-by: {{ .context.Release.Service }}
+app.kubernetes.io/part-of: text-generation-inference
+{{- with .context.Values.global.additionalLabels }}
 {{ toYaml . }}
 {{- end }}
 {{- end }}
-
 
 {{/*
 Construct the namespace for all namespaced resources.

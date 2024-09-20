@@ -4,41 +4,50 @@ metadata:
   name: {{ template "text-generation-inference.fullname" . }}
   namespace: {{ template "text-generation-inference.namespace" .}}
   labels:
-    {{- include "text-generation-inference.labels" . | nindent 4 }}
-    {{- with .Values.deployment.labels }}
+    {{- include "text-generation-inference.labels" (dict "context" . "component" .Values.tgi.name "name" .Values.tgi.name) | nindent 4 }}
+    {{- with (mergeOverwrite (deepCopy .Values.global.deploymentLabels) .Values.tgi.deploymentLabels) }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
+  {{- with (mergeOverwrite (deepCopy .Values.global.deploymentAnnotations) .Values.tgi.deploymentAnnotations) }}
   annotations:
-    {{- with .Values.deployment.annotations }}
     {{- toYaml . | nindent 4 }}
-    {{- end }}
+  {{- end }}
 spec:
-  replicas: 1
+  revisionHistoryLimit: {{ .Values.global.revisionHistoryLimit }}
+  replicas: 1 # TODO Variabilize and even add autoscaling -> https://github.com/argoproj/argo-helm/blob/8c0b68689540eb276ac92d921b2326e706a7ba7f/charts/argo-cd/templates/argocd-server/deployment.yaml#L19
   selector:
     matchLabels:
-      {{- include "text-generation-inference.selectorLabels" . | nindent 6 }}
+      {{- include "text-generation-inference.selectorLabels" (dict "context" . "name" .Values.tgi.name) | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "text-generation-inference.labels" . | nindent 8 }}
-        {{- with .Values.deployment.podLabels }}
+        {{- include "text-generation-inference.labels" (dict "context" . "component" .Values.tgi.name "name" .Values.tgi.name) | nindent 8 }}
+        {{- with (mergeOverwrite (deepCopy .Values.global.podLabels) .Values.tgi.podLabels) }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
+      {{- with (mergeOverwrite (deepCopy .Values.global.podAnnotations) .Values.tgi.podAnnotations) }}
       annotations:
-        {{- with .Values.deployment.podAnnotations }}
         {{- toYaml . | nindent 8 }}
-        {{- end }}
+      {{- end }}
     spec:
+      {{- with .Values.global.hostAliases }}
+      hostAliases:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.global.securityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
-      - name: text-generation-inference
-        image: {{ .Values.deployment.image.repository }}:{{ .Values.deployment.image.tag | default .Chart.AppVersion }}
-        imagePullPolicy: {{ .Values.deployment.image.pullPolicy }}
+      - name: {{ .Values.tgi.name | default "text-generation-inference" }}
+        image: {{ .Values.tgi.image.repository }}:{{ .Values.tgi.image.tag | default .Chart.AppVersion }}
+        imagePullPolicy: {{ .Values.tgi.image.imagePullPolicy | default .Values.global.imagePullPolicy }}
         command:
         - text-generation-launcher
         args:
         - --model-id
-        - {{ .Values.model }}
-        {{- with .Values.modelOptions }}
+        - {{ .Values.tgi.model }}
+        {{- with .Values.tgi.modelOptions }}
         {{- if .quantize }}
         - --quantize
         - {{ .quantize }}
@@ -52,8 +61,8 @@ spec:
         - name: HUGGING_FACE_HUB_TOKEN
           valueFrom:
             secretKeyRef:
-              name: {{ .Values.huggingFaceToken.secretName }}
-              key: {{ .Values.huggingFaceToken.secretKey }}
+              name: {{ .Values.tgi.huggingFaceToken.secretName }}
+              key: {{ .Values.tgi.huggingFaceToken.secretKey }}
         ports:
         - containerPort: 8080
           name: api
@@ -64,7 +73,7 @@ spec:
         - name: model-storage
           mountPath: /data
         resources:
-          {{- toYaml .Values.deployment.resources | nindent 10 }}
+          {{- toYaml .Values.tgi.resources | nindent 10 }}
       volumes:
       - name: shm
         emptyDir:
@@ -73,11 +82,15 @@ spec:
       - name: model-storage
         persistentVolumeClaim:
           claimName: {{ template "text-generation-inference.fullname" . }}
-      {{- with .Values.deployment.affinity }}
+      {{- with .Values.tgi.nodeSelector | default .Values.global.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tgi.affinity | default .Values.global.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.deployment.tolerations }}
+      {{- with .Values.tgi.tolerations | default .Values.global.tolerations }}
       tolerations:
-        {{- toYaml . | nindent 6 }}
+      {{- toYaml . | nindent 6 }}
       {{- end }}
