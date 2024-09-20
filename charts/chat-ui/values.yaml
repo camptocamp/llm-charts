@@ -176,6 +176,7 @@ mongodb:
 
   # -- Deployment mode for MongoDB. This can be standalone or replicaset. WARNING: replicaset mode is not supported by our chart.
   architecture: standalone
+  useStatefulSet: true
 
   service:
     nameOverride: chat-ui-mongodb
