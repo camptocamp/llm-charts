@@ -181,11 +181,11 @@ mongodb:
   service:
     nameOverride: chat-ui-mongodb
 
-  auth:
-    enabled: true
-    databases: ["chat-ui"] # This must match the database name used in the init job.
-    usernames: ["chat-ui"] # This must match the username used in the init job.
-    existingSecret: mongodb-init-secret
+  # auth:
+  #   enabled: true
+  #   databases: ["chat-ui"] # This must match the database name used in the init job.
+  #   usernames: ["chat-ui"] # This must match the username used in the init job.
+  #   existingSecret: mongodb-init-secret
 
   # TODO To test this
   tls:
