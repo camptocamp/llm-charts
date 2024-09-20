@@ -112,15 +112,11 @@ tgi:
   modelOptions:
     # quantize: bitsandbytes
 
+  modelStorage:
+    accessModes:
+    - ReadWriteOnce
+    size: 100Gi
+
   huggingFaceToken:
     secretName: hugging-face-token
     secretKey: token
-
-modelStorage:
-  accessModes:
-  - ReadWriteOnce
-  size: 100Gi
-
-huggingFaceToken:
-  secretName: hugging-face-token
-  secretKey: token
