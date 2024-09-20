@@ -183,8 +183,8 @@ mongodb:
 
   auth:
     enabled: true
-    databases: ["chat-ui"] # This must match the database name used in the init job.
-    usernames: ["chat-ui"] # This must match the username used in the init job.
+    databases: ["chatui"] # This must match the database name used in the init job.
+    usernames: ["chatui"] # This must match the username used in the init job.
     existingSecret: mongodb-init-secret
 
   persistence:
