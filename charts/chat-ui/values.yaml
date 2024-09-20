@@ -187,6 +187,12 @@ mongodb:
   #   usernames: ["chat-ui"] # This must match the username used in the init job.
   #   existingSecret: mongodb-init-secret
 
+  image:
+    debug: true
+
+  persistence:
+    size: 16Gi
+
   # TODO To test this
   tls:
     enabled: true
