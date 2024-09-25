@@ -116,6 +116,13 @@ chatui:
   ingress:
     enabled: false
 
+  # -- Name of the MongoDB database used by Chat UI.
+  # @default -- `chat-ui`
+  ## If you change this value, you must also change the `databaseName` in the MongoDB secret init job or provide a
+  ## secret for the MongoDB URL that contains the same database name.
+  mongodbName: chat-ui
+
+  # -- Secret containing the MongoDB URL. If not set, defaults to the secret created by the MongoDB secret init job.
   mongodbUrl:
     secretName: ""
     secretKey: MONGODB_URL
@@ -169,6 +176,14 @@ mongodbSecretInit:
   nodeSelector: {}
 
   affinity: {}
+
+  # -- Name to use for the MongoDB database.
+  # @default -- `chat-ui`
+  ## This value has no effect if you override the default command for the init job using `commandOverride`.
+  mongodbName: chat-ui
+
+  # -- Username for to use for the MongoDB username.
+  mongodbUsername: chat-ui
 
 # -- Configuration values for the MongoDB Helm chart used as a dependency.
 mongodb:

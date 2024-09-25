@@ -61,6 +61,8 @@ spec:
         {{- else }}
         {{- fail "Either enable embedded MongoDB or provide an external MongoDB host through a secret." }}
         {{- end }}
+        - name: MONGODB_DB_NAME
+          value: {{ .Values.chatui.mongodbName }}
         {{- with .Values.chatui.extraEnv }} # TODO Check if its not better to use a range instead
         {{- toYaml . | nindent 8 }}
         {{- end }}

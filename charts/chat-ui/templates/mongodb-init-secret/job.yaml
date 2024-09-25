@@ -44,8 +44,8 @@ spec:
           /bin/bash << 'EOF'
 
           export MONGODB_ROOT_PASSWORD=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32);
-          export MONGODB_DATABASE=chat-ui;
-          export MONGODB_USERNAME=chat-ui;
+          export MONGODB_DATABASE={{ .Values.mongodbSecretInit.mongodbName }};
+          export MONGODB_USERNAME={{ .Values.mongodbSecretInit.mongodbUsername }};
           export MONGODB_PASSWORD=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32);
 
           # If secret already exists, kubectl command returns 0 which means it succeded and we enter the if branch.
