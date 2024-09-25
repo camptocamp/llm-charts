@@ -53,6 +53,8 @@ spec:
               name: {{ .Values.chatui.huggingFaceToken.secretName }}
               key: {{ .Values.chatui.huggingFaceToken.secretKey }}
         {{- if or .Values.mongodbSecretInit.enabled .Values.chatui.mongodbUrl.secretName }}
+        - name: MONGODB_DB_NAME
+          value: {{ .Values.chatui.mongodbName }}
         - name: MONGODB_URL
           valueFrom:
             secretKeyRef:
@@ -61,11 +63,19 @@ spec:
         {{- else }}
         {{- fail "Either enable embedded MongoDB or provide an external MongoDB host through a secret." }}
         {{- end }}
-        - name: MONGODB_DB_NAME
-          value: {{ .Values.chatui.mongodbName }}
+        {{- if .Values.chatui.oidc.secretName }}
+        - name: OPENID_CONFIG
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.chatui.oidc.secretName }}
+              key: {{ .Values.chatui.oidc.secretKey | default "OPENID_CONFIG" }}
+        {{- end }}       
         {{- with .Values.chatui.extraEnv }} # TODO Check if its not better to use a range instead
         {{- toYaml . | nindent 8 }}
         {{- end }}
+        envFrom:
+        - configMapRef:
+            name: {{ include "chat-ui.fullname" . }}-cm # TODO Maybe add a way to reference another ConfigMap altogether
         readinessProbe:
           failureThreshold: 30
           periodSeconds: 10

@@ -1,0 +1,14 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "chat-ui.fullname" . }}-cm
+  namespace: {{ template "chat-ui.namespace" . }}
+  labels:
+    {{- include "chat-ui.labels" (dict "context" . "component" .Values.chatui.name "name" .Values.chatui.name) | nindent 4 }}
+data:
+  PUBLIC_ANNOUNCEMENT_BANNERS: []
+  MESSAGES_BEFORE_LOGIN: {{ .Values.chatui.oidc.secretName | ternary "0" "" }} # Require login for the first message if OIDC is enabled.
+  MODELS: {{ .Values.chatui.models }}
+
+# TODO Add a way to reload the deployment when this changes
