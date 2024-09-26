@@ -4,10 +4,10 @@ metadata:
   name: {{ template "chat-ui.fullname" . }}-svc
   namespace: {{ template "chat-ui.namespace" .}}
   labels:
-    {{- include "chat-ui.labels" (dict "context" . "component" .Values.tgi.name "name" .Values.tgi.name) | nindent 4 }}
+    {{- include "chat-ui.labels" (dict "context" . "component" .Values.chatui.name "name" .Values.chatui.name) | nindent 4 }}
 spec:
   selector:
-    {{- include "chat-ui.selectorLabels" (dict "context" . "name" .Values.tgi.name) | nindent 6 }}
+    {{- include "chat-ui.selectorLabels" (dict "context" . "name" .Values.chatui.name) | nindent 6 }}
   ports:
   - name: http
     port: 3000
