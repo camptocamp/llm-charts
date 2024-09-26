@@ -7,7 +7,7 @@ metadata:
   labels:
     {{- include "chat-ui.labels" (dict "context" . "component" .Values.chatui.name "name" .Values.chatui.name) | nindent 4 }}
 data:
-  PUBLIC_ANNOUNCEMENT_BANNERS: []
+  PUBLIC_ANNOUNCEMENT_BANNERS: {{ "[]" | toString }}
   MESSAGES_BEFORE_LOGIN: {{ ternary (0 | quote) "" (eq .Values.chatui.oidc.secretName "") }} # Require login for the first message if OIDC is enabled.
   MODELS: {{ .Values.chatui.models }}
 
