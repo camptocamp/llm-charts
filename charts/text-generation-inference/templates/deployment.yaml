@@ -10,7 +10,9 @@ metadata:
     {{- end }}
   {{- with (mergeOverwrite (deepCopy .Values.global.deploymentAnnotations) .Values.tgi.deploymentAnnotations) }}
   annotations:
-    {{- toYaml . | nindent 4 }}
+    {{- range $key, $value := . }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
   {{- end }}
 spec:
   revisionHistoryLimit: {{ .Values.global.revisionHistoryLimit }}
@@ -27,7 +29,9 @@ spec:
         {{- end }}
       {{- with (mergeOverwrite (deepCopy .Values.global.podAnnotations) .Values.tgi.podAnnotations) }}
       annotations:
-        {{- toYaml . | nindent 8 }}
+        {{- range $key, $value := . }}
+        {{ $key }}: {{ $value | quote }}
+        {{- end }}
       {{- end }}
     spec:
       {{- with .Values.global.hostAliases }}
