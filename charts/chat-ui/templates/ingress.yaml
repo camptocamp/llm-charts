@@ -1,0 +1,67 @@
+{{- if and .Values.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ template "chat-ui.fullname" . }}
+  namespace: {{ template "chat-ui.namespace" . }}
+  labels:
+    {{- include "chat-ui.labels" (dict "context" . "component" .Values.chatui.name "name" .Values.chatui.name) | nindent 4 }}
+    {{- with .Values.chatui.ingress.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.chatui.ingress.annotations }}
+  annotations:
+    {{- range $key, $value := . }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+  {{- end }}
+spec:
+  {{- with .Values.chatui.ingress.ingressClassName }}
+  ingressClassName: {{ . }}
+  {{- end }}
+  rules:
+    - host: {{ .Values.chatui.ingress.hostname }}
+      http:
+        paths:
+          {{- with .Values.chatui.ingress.extraPaths }}
+            {{- tpl (toYaml .) $ | nindent 10 }}
+          {{- end }}
+          - path: {{ .Values.chatui.ingress.path }}
+            pathType: {{ $.Values.chatui.ingress.pathType }}
+            backend:
+              service:
+                name: {{ template "chat-ui.fullname" . }}-svc
+                port:
+                  number: 3000
+    {{- range .Values.chatui.ingress.extraHosts }}
+    - host: {{ .name | quote }}
+      http:
+        paths:
+          - path: {{ default $.Values.chatui.ingress.path .path }}
+            pathType: {{ default $.Values.chatui.ingress.pathType .pathType }}
+            backend:
+              service:
+                name: {{ template "chat-ui.fullname" . }}-svc
+                port:
+                  number: 3000
+    {{- end }}
+    {{- with .Values.chatui.ingress.extraRules }}
+      {{- tpl (toYaml .) $ | nindent 4 }}
+    {{- end }}
+  {{- if or .Values.chatui.ingress.tls .Values.chatui.ingress.extraTls }}
+  tls:
+    {{- if .Values.chatui.ingress.tls }}
+    - hosts:
+      - {{ .Values.chatui.ingress.hostname }}
+      {{- range .Values.chatui.ingress.extraHosts }}
+        {{- if .name }}
+      -  {{ .name }}
+        {{- end }}
+      {{- end }}
+      secretName: chatui-tls
+    {{- end }}
+    {{- with .Values.chatui.ingress.extraTls }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- end }}
+{{- end }}

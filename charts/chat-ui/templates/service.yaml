@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "chat-ui.fullname" . }}-svc
+  namespace: {{ template "chat-ui.namespace" .}}
+  labels:
+    {{- include "chat-ui.labels" (dict "context" . "component" .Values.tgi.name "name" .Values.tgi.name) | nindent 4 }}
+spec:
+  selector:
+    {{- include "chat-ui.selectorLabels" (dict "context" . "name" .Values.tgi.name) | nindent 6 }}
+  ports:
+  - name: http
+    port: 3000
+    targetPort: 3000

@@ -112,11 +112,74 @@ chatui:
   metrics:
     enabled: false
 
-  # TODO
   ingress:
+    # -- Enable an ingress resource for the ChatUI server.
     enabled: false
+    # -- Additional ingress labels.
+    labels: {}
+    # -- Additional ingress annotations.
+    annotations: {}
+      # nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+      # nginx.ingress.kubernetes.io/ssl-passthrough: "true"
 
-  # -- Name of the MongoDB database used by Chat UI.
+    # -- Defines which ingress controller will implement the resource.
+    ingressClassName: ""
+
+    # -- Server hostname.
+    # @default -- `""`
+    hostname: ""
+
+    # -- Path to ChatUI server.
+    path: /
+
+    # -- Ingress path type. One of `Exact`, `Prefix` or `ImplementationSpecific`.
+    pathType: Prefix
+
+    # -- Enable TLS configuration for the hostname defined at `chatui.ingress.hostname`
+    ## TLS certificate will be retrieved from a TLS secret `chatui-tls`
+    ## You can create this secret via `certificate` or `certificateSecret` option
+    tls: false
+
+    # -- List of additional hostnames to be covered by the ingress record.
+    # @default -- `[]` (See [values.yaml])
+    extraHosts: []
+      # - name: chat-ui.example.com
+      #   path: /
+
+    # -- Additional ingress paths.
+    # @default -- `[]` (See [values.yaml])
+    ## Note: Supports use of custom Helm templates.
+    extraPaths: []
+      # - path: /*
+      #   pathType: Prefix
+      #   backend:
+      #     service:
+      #       name: ssl-redirect
+      #       port:
+      #         name: use-annotation
+
+    # -- Additional ingress rules.
+    # @default -- `[]` (See [values.yaml])
+    ## Note: Supports use of custom Helm templates.
+    extraRules: []
+      # - http:
+      #     paths:
+      #     - path: /
+      #       pathType: Prefix
+      #       backend:
+      #         service:
+      #           name: '{{ include "chat-ui.fullname" . }}'
+      #           port:
+      #             name: '{{ .Values.chat-ui.service.servicePortHttpsName }}' # TODO We do not yet have these values
+
+    # -- Additional TLS configuration.
+    # @default -- `[]` (See [values.yaml])
+    extraTls: []
+      # - hosts:
+      #   - chat-ui.example.com
+      #   secretName: your-certificate-name
+
+  # -- Name of the MongoDB database used by ChatUI.
   # @default -- `chat-ui`
   ## If you change this value, you must also change the `databaseName` in the MongoDB secret init job or provide a
   ## secret for the MongoDB URL that contains the same database name.
