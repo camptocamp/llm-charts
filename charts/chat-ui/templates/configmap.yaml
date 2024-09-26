@@ -9,6 +9,6 @@ metadata:
 data:
   PUBLIC_ANNOUNCEMENT_BANNERS: {{ "[]" | toPrettyJson }}
   MESSAGES_BEFORE_LOGIN: {{ ternary (0 | quote) "" (eq .Values.chatui.oidc.secretName "") }} # Require login for the first message if OIDC is enabled.
-  MODELS: ""
+  MODELS: {{ .Values.chatui.models | toPrettyJson }}
 
 # TODO Add a way to reload the deployment when this changes
