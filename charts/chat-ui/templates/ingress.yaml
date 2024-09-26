@@ -41,7 +41,7 @@ spec:
             pathType: {{ default $.Values.chatui.ingress.pathType .pathType }}
             backend:
               service:
-                name: {{ template "chat-ui.fullname" . }}-svc
+                name: {{ template "chat-ui.fullname" $ }}-svc
                 port:
                   number: 3000
     {{- end }}
