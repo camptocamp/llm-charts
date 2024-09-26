@@ -98,10 +98,36 @@ tgi:
 
   # TODO
   replicas: 1
-
-  # TODO
+  
+  # -- Metrics configuration for Text Generation Inference service.
   metrics:
+    # -- Deploy metrics service.
     enabled: false
+    serviceMonitor:
+      # -- Enable a Prometheus ServiceMonitor.
+      enabled: false
+      # -- Prometheus ServiceMonitor interval.
+      interval: 30s
+      # -- Prometheus ServiceMonitor scrapeTimeout. If empty, Prometheus uses the global scrape timeout unless it is less than the target's scrape interval value in which the latter is used.
+      scrapeTimeout: ""
+      # -- Prometheus [RelabelConfigs] to apply to samples before scraping.
+      relabelings: []
+      # -- Prometheus [MetricRelabelConfigs] to apply to samples before ingestion.
+      metricRelabelings: []
+      # -- Prometheus ServiceMonitor selector.
+      selector: {}
+        # prometheus: kube-prometheus
+
+      # -- Prometheus ServiceMonitor scheme.
+      scheme: ""
+      # -- Prometheus ServiceMonitor tlsConfig.
+      tlsConfig: {}
+      # -- Prometheus ServiceMonitor namespace.
+      namespace: "" # "monitoring"
+      # -- Prometheus ServiceMonitor labels.
+      additionalLabels: {}
+      # -- Prometheus ServiceMonitor annotations.
+      annotations: {}
 
   # TODO
   ingress:
