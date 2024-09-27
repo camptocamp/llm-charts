@@ -1,3 +1,4 @@
+{{- if and (.Capabilities.APIVersions.Has "monitoring.coreos.com/v1") .Values.tgi.metrics.enabled .Values.tgi.metrics.serviceMonitor.enabled }}
 {{- $files := .Files.Glob "dashboards/*.json" }}
 {{- if $files }}
 apiVersion: v1
@@ -14,5 +15,6 @@ items:
       grafana_dashboard: '1'
   data:
     {{ $dashboardName }}.json: {{ $.Files.Get $path | toJson }}
+{{- end }}
 {{- end }}
 {{- end }}
