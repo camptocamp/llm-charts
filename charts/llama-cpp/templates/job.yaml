@@ -1,3 +1,4 @@
+{{- if .Values.modelOptions.benchmark.enabled }}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -36,3 +37,4 @@ spec:
       {{- end }}
   completions: 1
   backoffLimit: 10
+{{- end }}

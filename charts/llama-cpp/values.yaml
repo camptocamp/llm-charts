@@ -45,6 +45,7 @@ modelOptions:
     convertFormat: q4_0
   metricsEnable: true
   benchmark:
+    enabled: false
     promptNumber: 512
     textGenerationNumber: 128
     batchNumber: 2048

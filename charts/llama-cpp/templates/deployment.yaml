@@ -107,5 +107,3 @@ spec:
       tolerations:
         {{- toYaml . | nindent 6 }}
       {{- end }}
-
-
