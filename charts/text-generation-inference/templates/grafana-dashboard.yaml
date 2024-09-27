@@ -1,4 +1,4 @@
-{{- if and (.Capabilities.APIVersions.Has "monitoring.coreos.com/v1") .Values.tgi.metrics.enabled .Values.tgi.metrics.serviceMonitor.enabled }}
+{{- if .Values.tgi.metrics.enabled }}
 {{- $files := .Files.Glob "dashboards/*.json" }}
 {{- if $files }}
 apiVersion: v1
@@ -9,8 +9,8 @@ items:
 - apiVersion: v1
   kind: ConfigMap
   metadata:
-    name: {{ printf "%s-dashboard-%s" (template "text-generation-inference.fullname" .) $dashboardName | trunc 63 | trimSuffix "-" }}
-    namespace: {{ template "text-generation-inference.namespace" .}}
+    name: {{ printf "%s-dashboard-%s" $.Release.Name $dashboardName | trunc 63 | trimSuffix "-" }}
+    namespace: {{ template "text-generation-inference.namespace" $ }}
     labels:
       grafana_dashboard: '1'
   data:
